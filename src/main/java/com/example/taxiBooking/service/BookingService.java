@@ -2,6 +2,7 @@ package com.example.taxiBooking.service;
 
 import com.example.taxiBooking.contract.request.BookingRequest;
 import com.example.taxiBooking.contract.response.BookingResponse;
+import com.example.taxiBooking.contract.response.TaxiResponse;
 import com.example.taxiBooking.model.Booking;
 import com.example.taxiBooking.model.Taxi;
 import com.example.taxiBooking.model.User;
@@ -14,6 +15,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,10 +47,27 @@ public class BookingService {
                 .bookingTime(LocalDateTime.now())
                 .pickUpLocation(request.getPickUpLocation())
                 .dropOffLocation(request.getDropOffLocation())
-                .status(true)
+                .bookingStatus(true)
+                .rideStatus(false)
                 .build();
         bookingRepository.save(booking1);
         return modelMapper.map(booking1,BookingResponse.class);
+    }
+    public List<TaxiResponse> availableTaxi(String pickupLocation) {
+        List<Taxi> allTaxi = taxiRepository.findAll();
+        List<Taxi> availableTaxi = new ArrayList<>();
+        for (Taxi taxi : allTaxi) {
+            if (taxi.getCurrentLocation().equals(pickupLocation)) {
+                availableTaxi.add(taxi);
+            }
+        }
+        if (availableTaxi.isEmpty()) {
+            throw new EntityNotFoundException("not available near pickup location");
+        } else {
+            return availableTaxi
+                    .stream()
+                    .map(taxi -> modelMapper.map(taxi, TaxiResponse.class)).collect(Collectors.toList());
+        }
     }
     public Booking getById(Long id) {
         return bookingRepository
@@ -62,7 +83,8 @@ public class BookingService {
                 .orElseThrow(
                         ()->new EntityNotFoundException("booking not found")
                 );
-        booking.setStatus(false);
+        booking.setBookingStatus(false);
         bookingRepository.save(booking);
     }
+
 }

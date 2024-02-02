@@ -4,7 +4,9 @@ import com.example.taxiBooking.contract.request.SignUpRequest;
 import com.example.taxiBooking.contract.request.UpdateAccountRequest;
 import com.example.taxiBooking.contract.response.SignUpResponse;
 import com.example.taxiBooking.contract.response.UpdateAccountResponse;
+import com.example.taxiBooking.model.Booking;
 import com.example.taxiBooking.model.User;
+import com.example.taxiBooking.repository.BookingRepository;
 import com.example.taxiBooking.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final BookingRepository bookingRepository;
 //    private final JwtService jwtService;
 //    private final AuthenticationManager authenticationManager;
     public SignUpResponse register(SignUpRequest request) {
@@ -40,7 +43,27 @@ public class UserService {
         User updatedUser = userRepository.save(user);
         return modelMapper.map(updatedUser,UpdateAccountResponse.class);
     }
-
+    public void completeRide(Long userId, Long bookingId, UpdateAccountResponse response) {
+        Booking booking = bookingRepository
+                .findById(bookingId)
+                .orElseThrow(
+                        ()->new EntityNotFoundException("booking not found")
+                );
+        booking.setRideStatus(true);
+        bookingRepository.save(booking);
+        if(booking.isRideStatus(true)){
+            bookingRepository.findById(bookingId)
+                    .orElseThrow(()-> new EntityNotFoundException());
+            double accountBalance = response.getAccountBalance()-booking.getFare();
+            User User = userRepository
+                    .findById(userId)
+                    .orElseThrow(
+                            () -> new EntityNotFoundException()
+                    );
+            User.setAccountBalance(accountBalance);
+            userRepository.save(User);
+        }
+    }
 
 //    public LoginResponse authenticate(LoginRequest request) {
 //        AuthenticationManager.authenticate(

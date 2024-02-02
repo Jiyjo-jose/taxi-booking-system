@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -35,5 +36,10 @@ public class UserController {
     public ResponseEntity<UpdateAccountResponse>updateAccount(@PathVariable Long id, @RequestBody UpdateAccountRequest request){
         UpdateAccountResponse response= userService.updateAccount(id,request);
         return ResponseEntity.ok(response);
+    }
+        @PutMapping("/rideCompleted")
+    public ResponseEntity<String> completeRide(@RequestParam Long userId, @RequestParam Long bookingId, @RequestBody UpdateAccountResponse response){
+        userService.completeRide(userId,bookingId, response);
+        return ResponseEntity.ok("ride completed");
     }
 }
