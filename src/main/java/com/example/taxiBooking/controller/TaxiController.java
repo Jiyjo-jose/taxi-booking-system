@@ -1,8 +1,6 @@
 package com.example.taxiBooking.controller;
 
-import com.example.taxiBooking.contract.request.BookingRequest;
 import com.example.taxiBooking.contract.request.TaxiRequest;
-import com.example.taxiBooking.contract.response.BookingResponse;
 import com.example.taxiBooking.contract.response.TaxiResponse;
 import com.example.taxiBooking.service.TaxiService;
 import jakarta.validation.Valid;

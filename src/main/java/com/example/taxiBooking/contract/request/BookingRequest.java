@@ -8,6 +8,5 @@ import lombok.Data;
 public class BookingRequest {
     private String pickUpLocation;
     private String dropOffLocation;
-//    private double distance;
 
 }
