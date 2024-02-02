@@ -3,7 +3,11 @@ package com.example.taxiBooking.service;
 import com.example.taxiBooking.contract.request.BookingRequest;
 import com.example.taxiBooking.contract.response.BookingResponse;
 import com.example.taxiBooking.model.Booking;
+import com.example.taxiBooking.model.Taxi;
+import com.example.taxiBooking.model.User;
 import com.example.taxiBooking.repository.BookingRepository;
+import com.example.taxiBooking.repository.TaxiRepository;
+import com.example.taxiBooking.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -16,11 +20,25 @@ import java.time.LocalDateTime;
 public class BookingService {
     private final ModelMapper modelMapper;
     private final BookingRepository bookingRepository;
+    private final UserRepository userRepository;
+    private final TaxiRepository taxiRepository;
 
-    public BookingResponse book(BookingRequest request) {
+    public BookingResponse book(BookingRequest request, Long UserId, Long TaxiId, double distance) {
+        User  user = userRepository
+                .findById(UserId)
+                .orElseThrow(
+                ()-> new EntityNotFoundException()
+        );
+        Taxi  taxi =taxiRepository
+                .findById(TaxiId)
+                .orElseThrow(
+                        ()->new EntityNotFoundException()
+                );
         Double basicFare= 100.00;
-        Double fare = basicFare + (request.getDistance()*20.00);
+        Double fare = basicFare + ((distance-5)*20.00);
         Booking booking1= Booking.builder()
+                .user(user)
+                .taxi(taxi)
                 .fare(fare)
                 .bookingTime(LocalDateTime.now())
                 .pickUpLocation(request.getPickUpLocation())
@@ -28,8 +46,6 @@ public class BookingService {
                 .status(true)
                 .build();
         bookingRepository.save(booking1);
-//        Booking booking1 = modelMapper.map(request,Booking.class);
-//        Booking booking1=bookingRepository.save(booking);
         return modelMapper.map(booking1,BookingResponse.class);
     }
 
