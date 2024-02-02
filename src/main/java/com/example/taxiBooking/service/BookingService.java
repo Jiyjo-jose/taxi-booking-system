@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Book;
 import java.time.LocalDateTime;
 
 @Service
@@ -48,7 +49,13 @@ public class BookingService {
         bookingRepository.save(booking1);
         return modelMapper.map(booking1,BookingResponse.class);
     }
-
+    public Booking getById(Long id) {
+        return bookingRepository
+                .findById(id)
+                .orElseThrow(
+                        ()-> new EntityNotFoundException()
+                );
+    }
 
     public void cancelBooking(Long id) {
         Booking booking = bookingRepository

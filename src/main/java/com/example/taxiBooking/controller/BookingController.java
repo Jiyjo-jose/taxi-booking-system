@@ -1,14 +1,13 @@
 package com.example.taxiBooking.controller;
 
 import com.example.taxiBooking.contract.request.BookingRequest;
-import com.example.taxiBooking.contract.request.SignUpRequest;
 import com.example.taxiBooking.contract.response.BookingResponse;
-import com.example.taxiBooking.contract.response.SignUpResponse;
-import com.example.taxiBooking.repository.BookingRepository;
+import com.example.taxiBooking.model.Booking;
 import com.example.taxiBooking.service.BookingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,12 +27,15 @@ public class BookingController {
     public ResponseEntity<BookingResponse> book(@Valid @RequestBody BookingRequest request , @RequestParam Long userId, @RequestParam Long taxiId, @RequestParam double distance){
         return ResponseEntity.ok(bookingService.book(request,userId,taxiId,distance));
     }
+    @GetMapping("/{id}/viewBooking")
+    public Booking getById(@PathVariable Long id){
+        return bookingService.getById(id);
+    }
     @PutMapping("/{id}/cancel")
-    public ResponseEntity<String>cancelBooking(@PathVariable Long id){
+    public ResponseEntity<String> cancelBooking(@PathVariable Long id){
         bookingService.cancelBooking(id);
         return ResponseEntity.ok("booking cancelled");
 
-
-
     }
+
 }
