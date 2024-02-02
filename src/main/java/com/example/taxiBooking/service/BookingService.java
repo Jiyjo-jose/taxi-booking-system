@@ -4,6 +4,7 @@ import com.example.taxiBooking.contract.request.BookingRequest;
 import com.example.taxiBooking.contract.response.BookingResponse;
 import com.example.taxiBooking.model.Booking;
 import com.example.taxiBooking.repository.BookingRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +35,14 @@ public class BookingService {
         return modelMapper.map(booking1,BookingResponse.class);
     }
 
-//    public ResponseEntity<String>cancelBooking(@PathVariable Long id){
-//
-//    }
 
+    public void cancelBooking(Long id) {
+        Booking booking = bookingRepository
+                .findById(id)
+                .orElseThrow(
+                        ()->new EntityNotFoundException("booking not found")
+                );
+        booking.setStatus(false);
+        bookingRepository.save(booking);
+    }
 }

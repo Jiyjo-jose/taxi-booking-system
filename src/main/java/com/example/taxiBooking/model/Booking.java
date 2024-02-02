@@ -39,6 +39,10 @@ public class Booking {
     private  String dropOffLocation;
     private double fare;
     private LocalDateTime bookingTime;
+
     private boolean status;
 
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 }
