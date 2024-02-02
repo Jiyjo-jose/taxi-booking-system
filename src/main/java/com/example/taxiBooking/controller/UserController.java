@@ -1,9 +1,7 @@
 package com.example.taxiBooking.controller;
 
-import com.example.taxiBooking.contract.request.LoginRequest;
 import com.example.taxiBooking.contract.request.SignUpRequest;
 import com.example.taxiBooking.contract.request.UpdateAccountRequest;
-import com.example.taxiBooking.contract.response.LoginResponse;
 import com.example.taxiBooking.contract.response.SignUpResponse;
 import com.example.taxiBooking.contract.response.UpdateAccountResponse;
 import com.example.taxiBooking.service.UserService;

@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class BookingController {
 
-    private final BookingRepository bookingRepository;
     private final BookingService bookingService;
 
     @PostMapping("/booking")

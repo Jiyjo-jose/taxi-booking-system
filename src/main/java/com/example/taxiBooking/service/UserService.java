@@ -1,14 +1,12 @@
 package com.example.taxiBooking.service;
 
-import com.example.taxiBooking.contract.request.LoginRequest;
 import com.example.taxiBooking.contract.request.SignUpRequest;
 import com.example.taxiBooking.contract.request.UpdateAccountRequest;
-import com.example.taxiBooking.contract.response.LoginResponse;
 import com.example.taxiBooking.contract.response.SignUpResponse;
 import com.example.taxiBooking.contract.response.UpdateAccountResponse;
 import com.example.taxiBooking.model.User;
 import com.example.taxiBooking.repository.UserRepository;
-import com.example.taxiBooking.security.JwtService;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
