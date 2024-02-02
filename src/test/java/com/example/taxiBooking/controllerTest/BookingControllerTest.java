@@ -1,7 +1,6 @@
 package com.example.taxiBooking.controllerTest;
 
 import com.example.taxiBooking.contract.request.BookingRequest;
-import com.example.taxiBooking.contract.request.TaxiRequest;
 import com.example.taxiBooking.contract.response.BookingResponse;
 import com.example.taxiBooking.contract.response.TaxiResponse;
 import com.example.taxiBooking.controller.BookingController;
@@ -13,8 +12,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 public class BookingControllerTest {
@@ -41,6 +44,14 @@ public class BookingControllerTest {
         when(bookingService.getById(anyLong())).thenReturn(sampleBooking);
         Booking result = bookingController.getById(1L);
         assertEquals(sampleBooking,result);
+    }
+
+    @Test
+    void testAvailableTaxi(){
+        List<TaxiResponse> testResponses = new ArrayList<>();
+        when(bookingService.availableTaxi(anyString())).thenReturn(testResponses);
+        List<TaxiResponse> result = bookingController.availableTaxi(null);
+        assertEquals(testResponses,result);
     }
 
 }

@@ -1,7 +1,9 @@
 package com.example.taxiBooking.serviceTest;
 
 import com.example.taxiBooking.contract.response.BookingResponse;
+import com.example.taxiBooking.contract.response.TaxiResponse;
 import com.example.taxiBooking.model.Booking;
+import com.example.taxiBooking.model.Taxi;
 import com.example.taxiBooking.repository.BookingRepository;
 import com.example.taxiBooking.repository.TaxiRepository;
 import com.example.taxiBooking.repository.UserRepository;
@@ -13,10 +15,13 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 public class BookingServiceTest {
@@ -55,4 +60,12 @@ public class BookingServiceTest {
         Booking retrievedEmployee= bookingService.getById(id);
         assertEquals(sampleBooking,retrievedEmployee);
     }
+
+//    @Test
+//    void testAvailableTaxi(){
+//        List<Taxi> sampleTaxi= Collections.singletonList(new Taxi(1L,null,null,"abc",null));
+//        when(taxiRepository.availableTaxi(anyString())).thenReturn(sampleTaxi);
+//        List<TaxiResponse>taxiResponse=bookingService.availableTaxi("abc");
+//        assertEquals(1,taxiResponse.size());
+//    }
 }

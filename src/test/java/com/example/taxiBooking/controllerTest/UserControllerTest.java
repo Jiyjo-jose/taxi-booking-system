@@ -13,8 +13,7 @@ import org.mockito.MockitoAnnotations;
 import static org.mockito.Mockito.when;
 
 public class UserControllerTest {
-    @InjectMocks
-    private UserController userController;
+
     @Mock
     private UserService userService;
     @BeforeEach
