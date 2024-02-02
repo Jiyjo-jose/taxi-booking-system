@@ -1,14 +1,10 @@
 package com.example.taxiBooking.serviceTest;
 
-import com.example.taxiBooking.contract.request.SignUpRequest;
 import com.example.taxiBooking.contract.request.TaxiRequest;
-import com.example.taxiBooking.contract.response.SignUpResponse;
 import com.example.taxiBooking.contract.response.TaxiResponse;
 import com.example.taxiBooking.model.Taxi;
-import com.example.taxiBooking.model.User;
 import com.example.taxiBooking.repository.TaxiRepository;
 import com.example.taxiBooking.service.TaxiService;
-import com.example.taxiBooking.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

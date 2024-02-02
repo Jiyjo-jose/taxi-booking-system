@@ -31,15 +31,15 @@ public class BookingService {
         User  user = userRepository
                 .findById(UserId)
                 .orElseThrow(
-                ()-> new EntityNotFoundException()
+                        EntityNotFoundException::new
         );
         Taxi  taxi =taxiRepository
                 .findById(TaxiId)
                 .orElseThrow(
-                        ()->new EntityNotFoundException()
+                        EntityNotFoundException::new
                 );
-        Double basicFare= 100.00;
-        Double fare = basicFare + ((distance-5)*20.00);
+        double basicFare= 100.00;
+        double fare = basicFare + ((distance-5)*20.00);
         Booking booking1= Booking.builder()
                 .user(user)
                 .taxi(taxi)
