@@ -13,7 +13,7 @@ public class BookingResponse {
 
     private Long id;
     private String pickUpLocation;
-
     private  String dropOffLocation;
     private LocalDateTime bookingTime;
+    private double fare;
 }
