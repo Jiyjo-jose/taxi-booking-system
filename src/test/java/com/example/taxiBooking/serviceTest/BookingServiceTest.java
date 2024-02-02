@@ -1,6 +1,5 @@
 package com.example.taxiBooking.serviceTest;
 
-import com.example.taxiBooking.contract.request.BookingRequest;
 import com.example.taxiBooking.contract.response.BookingResponse;
 import com.example.taxiBooking.model.Booking;
 import com.example.taxiBooking.repository.BookingRepository;
@@ -13,6 +12,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -44,5 +45,14 @@ public class BookingServiceTest {
         when(bookingRepository.save(any())).thenReturn(savedBooking);
         BookingResponse actualResponse = new BookingResponse();
         assertEquals(expectedResponse,actualResponse);
+    }
+
+    @Test
+    void testGetById(){
+        Booking sampleBooking= new Booking(1L,null,null,null,null,10d,null,true,true);
+        Long id=1L;
+        when (bookingRepository.findById(id)).thenReturn(Optional.of(sampleBooking));
+        Booking retrievedEmployee= bookingService.getById(id);
+        assertEquals(sampleBooking,retrievedEmployee);
     }
 }
