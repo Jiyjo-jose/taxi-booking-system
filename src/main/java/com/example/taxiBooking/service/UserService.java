@@ -54,6 +54,9 @@ public class UserService {
         if(booking.isRideStatus(true)){
             bookingRepository.findById(bookingId)
                     .orElseThrow(()-> new EntityNotFoundException());
+            if(response.getAccountBalance()<booking.getFare()){
+                throw new RuntimeException("you don't have enough money for the ride sorry ");
+            }
             double accountBalance = response.getAccountBalance()-booking.getFare();
             User User = userRepository
                     .findById(userId)
