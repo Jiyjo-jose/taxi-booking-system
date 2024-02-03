@@ -4,6 +4,7 @@ import com.example.taxiBooking.contract.request.SignUpRequest;
 import com.example.taxiBooking.contract.request.UpdateAccountRequest;
 import com.example.taxiBooking.contract.response.SignUpResponse;
 import com.example.taxiBooking.contract.response.UpdateAccountResponse;
+import com.example.taxiBooking.model.Booking;
 import com.example.taxiBooking.model.User;
 import com.example.taxiBooking.repository.BookingRepository;
 import com.example.taxiBooking.repository.UserRepository;
@@ -18,8 +19,8 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -58,5 +59,27 @@ public class UserServiceTest {
         UpdateAccountResponse updatedResponse = userService.updateAccount(1L, request);
         assertEquals(updatedResponse, userService.updateAccount(1L, request));
     }
+    @Test
+    public void testCompleteRide() {
+        Long userId = 1L;
+        Long bookingId = 1L;
+        UpdateAccountResponse updateAccountResponse = new UpdateAccountResponse();
+        Booking booking = new Booking();
+        booking.setRideStatus(false);
+
+        User user = new User();
+        booking.setId(bookingId);
+        booking.setRideStatus(true);
+
+        when(bookingRepository.findById(bookingId)).thenReturn(Optional.of(booking));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        userService.completeRide(userId, bookingId,updateAccountResponse);
+
+        verify(bookingRepository).save(booking);
+
+        assertTrue(booking.isRideStatus(true));
+    }
+
 
 }

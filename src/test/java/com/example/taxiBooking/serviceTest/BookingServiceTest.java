@@ -14,14 +14,12 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -62,8 +60,12 @@ public class BookingServiceTest {
         assertEquals(sampleBooking,retrievedEmployee);
     }
 
+
     @Test
     void testAvailableTaxi(){
+        Long taxiId=1L;
+        Taxi taxi = new Taxi();
+        when(taxiRepository.findById(taxiId)).thenReturn(Optional.of(taxi));
         List<TaxiResponse>taxiResponse=bookingService.availableTaxi("abc");
         assertEquals(0,taxiResponse.size());
     }

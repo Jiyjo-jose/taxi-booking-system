@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,5 +52,17 @@ private UserController userController;
         assertEquals(updatedAccount, responseEntity.getBody());
 
         verify(userService, times(1)).updateAccount(userId,updateAccountRequest );
+    }
+    @Test
+    void testCompleteRide() {
+        Long userId = 1L;
+        Long bookingId = 1L;
+        UpdateAccountResponse updateAccountResponse= new UpdateAccountResponse();
+        doNothing().when(userService).completeRide(userId, bookingId,updateAccountResponse);
+        ResponseEntity<String> responseEntity =
+                userController.completeRide(userId, bookingId,updateAccountResponse);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals("ride completed", responseEntity.getBody());
+        verify(userService, times(1)).completeRide(userId, bookingId,updateAccountResponse);
     }
 }

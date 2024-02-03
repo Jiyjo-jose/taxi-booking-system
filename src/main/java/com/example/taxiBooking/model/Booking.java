@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -53,4 +55,6 @@ public class Booking {
         this.rideStatus =b;
         return b;
     }
+
+
 }
