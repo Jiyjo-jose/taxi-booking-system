@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TaxiRepository extends JpaRepository<Taxi,Long> {
-    Object availableTaxi(String s);
+
 }

@@ -64,8 +64,6 @@ public class BookingServiceTest {
 
     @Test
     void testAvailableTaxi(){
-        List<Taxi> sampleTaxi= Collections.singletonList(new Taxi(1L,null,null,"abc",null));
-        when(taxiRepository.availableTaxi(anyString())).thenReturn(sampleTaxi);
         List<TaxiResponse>taxiResponse=bookingService.availableTaxi("abc");
         assertEquals(0,taxiResponse.size());
     }
