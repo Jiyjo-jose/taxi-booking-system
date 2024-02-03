@@ -3,9 +3,11 @@ package com.example.taxiBooking.service;
 import com.example.taxiBooking.contract.request.BookingRequest;
 import com.example.taxiBooking.contract.response.BookingResponse;
 import com.example.taxiBooking.contract.response.TaxiResponse;
-//import com.example.taxiBooking.exception.BookingNotFoundException;
+import com.example.taxiBooking.exception.BookingNotFoundException;
 //import com.example.taxiBooking.exception.TaxiNotFoundException;
 //import com.example.taxiBooking.exception.UserNotFoundException;
+import com.example.taxiBooking.exception.TaxiNotFoundException;
+import com.example.taxiBooking.exception.UserNotFoundException;
 import com.example.taxiBooking.model.Booking;
 import com.example.taxiBooking.model.Taxi;
 import com.example.taxiBooking.model.User;
@@ -34,12 +36,12 @@ public class BookingService {
         User  user = userRepository
                 .findById(UserId)
                 .orElseThrow(
-                        ()-> new EntityNotFoundException("user not found")
+                        ()-> new UserNotFoundException("user not found")
         );
         Taxi  taxi =taxiRepository
                 .findById(TaxiId)
                 .orElseThrow(
-                        ()-> new EntityNotFoundException("taxi not found")
+                        ()-> new TaxiNotFoundException()
                 );
         double basicFare= 100.00;
         double fare = basicFare + ((distance-5)*20.00);
@@ -65,7 +67,7 @@ public class BookingService {
             }
         }
 //        if (availableTaxi.isEmpty()) {
-//            throw new TaxiNotFoundException();
+//            throw new EntityNotFoundException("taxi not found");
 //        } else {
             return availableTaxi
                     .stream()
@@ -78,14 +80,14 @@ public class BookingService {
         return bookingRepository
                 .findById(id)
                 .orElseThrow(
-                        ()-> new EntityNotFoundException("Booking Not Found"));
+                        ()-> new BookingNotFoundException("Booking Not Found"));
     }
 
     public void cancelBooking(Long id) {
         Booking booking = bookingRepository
                 .findById(id)
                 .orElseThrow(
-                        ()->new EntityNotFoundException("booking not found")
+                        ()->new BookingNotFoundException("booking not found")
                 );
         booking.setBookingStatus(false);
         bookingRepository.save(booking);
