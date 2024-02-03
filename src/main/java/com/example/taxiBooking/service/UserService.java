@@ -1,14 +1,14 @@
 package com.example.taxiBooking.service;
 
-import com.example.taxiBooking.contract.request.LoginRequest;
+//import com.example.taxiBooking.contract.request.LoginRequest;
 import com.example.taxiBooking.contract.request.SignUpRequest;
 import com.example.taxiBooking.contract.request.UpdateAccountRequest;
-import com.example.taxiBooking.contract.response.AuthResponse;
+//import com.example.taxiBooking.contract.response.AuthResponse;
 import com.example.taxiBooking.contract.response.SignUpResponse;
 import com.example.taxiBooking.contract.response.UpdateAccountResponse;
-import com.example.taxiBooking.exception.BookingNotFoundException;
-import com.example.taxiBooking.exception.InvalidLoginException;
-import com.example.taxiBooking.exception.UserNotFoundException;
+//import com.example.taxiBooking.exception.BookingNotFoundException;
+//import com.example.taxiBooking.exception.InvalidLoginException;
+//import com.example.taxiBooking.exception.UserNotFoundException;
 import com.example.taxiBooking.model.Booking;
 import com.example.taxiBooking.model.User;
 import com.example.taxiBooking.repository.BookingRepository;
@@ -18,8 +18,8 @@ import com.example.taxiBooking.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.authentication.AuthenticationManager;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -55,7 +55,7 @@ public class UserService {
 //    }
     public UpdateAccountResponse updateAccount(Long id, UpdateAccountRequest request) {
         User user = userRepository.findById(id).orElseThrow(
-                ()-> new UserNotFoundException("user not found")
+                ()-> new EntityNotFoundException("user not found")
         );
         modelMapper.map(request,user);
         User updatedUser = userRepository.save(user);
@@ -65,13 +65,13 @@ public class UserService {
         Booking booking = bookingRepository
                 .findById(bookingId)
                 .orElseThrow(
-                        ()->new BookingNotFoundException("booking not found")
+                        ()->new EntityNotFoundException("booking not found")
                 );
         booking.setRideStatus(true);
         bookingRepository.save(booking);
         if(booking.isRideStatus(true)){
             bookingRepository.findById(bookingId)
-                    .orElseThrow(()-> new BookingNotFoundException("booking not found"));
+                    .orElseThrow(()-> new EntityNotFoundException("booking not found"));
             if(response.getAccountBalance()<booking.getFare()){
                 throw new RuntimeException("you don't have enough money for the ride sorry ");
             }
@@ -79,7 +79,7 @@ public class UserService {
             User User = userRepository
                     .findById(userId)
                     .orElseThrow(
-                            () -> new UserNotFoundException("user not found")
+                            () -> new EntityNotFoundException("user not found")
                     );
             User.setAccountBalance(accountBalance);
             userRepository.save(User);

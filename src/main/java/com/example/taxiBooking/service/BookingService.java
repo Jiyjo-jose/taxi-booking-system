@@ -3,9 +3,9 @@ package com.example.taxiBooking.service;
 import com.example.taxiBooking.contract.request.BookingRequest;
 import com.example.taxiBooking.contract.response.BookingResponse;
 import com.example.taxiBooking.contract.response.TaxiResponse;
-import com.example.taxiBooking.exception.BookingNotFoundException;
-import com.example.taxiBooking.exception.TaxiNotFoundException;
-import com.example.taxiBooking.exception.UserNotFoundException;
+//import com.example.taxiBooking.exception.BookingNotFoundException;
+//import com.example.taxiBooking.exception.TaxiNotFoundException;
+//import com.example.taxiBooking.exception.UserNotFoundException;
 import com.example.taxiBooking.model.Booking;
 import com.example.taxiBooking.model.Taxi;
 import com.example.taxiBooking.model.User;
@@ -34,12 +34,12 @@ public class BookingService {
         User  user = userRepository
                 .findById(UserId)
                 .orElseThrow(
-                        ()-> new UserNotFoundException("user not found")
+                        ()-> new EntityNotFoundException("user not found")
         );
         Taxi  taxi =taxiRepository
                 .findById(TaxiId)
                 .orElseThrow(
-                        ()-> new TaxiNotFoundException()
+                        ()-> new EntityNotFoundException("taxi not found")
                 );
         double basicFare= 100.00;
         double fare = basicFare + ((distance-5)*20.00);
@@ -78,14 +78,14 @@ public class BookingService {
         return bookingRepository
                 .findById(id)
                 .orElseThrow(
-                        ()-> new BookingNotFoundException("Booking Not Found"));
+                        ()-> new EntityNotFoundException("Booking Not Found"));
     }
 
     public void cancelBooking(Long id) {
         Booking booking = bookingRepository
                 .findById(id)
                 .orElseThrow(
-                        ()->new BookingNotFoundException("booking not found")
+                        ()->new EntityNotFoundException("booking not found")
                 );
         booking.setBookingStatus(false);
         bookingRepository.save(booking);

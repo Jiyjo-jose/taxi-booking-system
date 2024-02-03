@@ -1,7 +1,9 @@
 package com.example.taxiBooking.serviceTest;
 
 import com.example.taxiBooking.contract.request.SignUpRequest;
+import com.example.taxiBooking.contract.request.UpdateAccountRequest;
 import com.example.taxiBooking.contract.response.SignUpResponse;
+import com.example.taxiBooking.contract.response.UpdateAccountResponse;
 import com.example.taxiBooking.model.User;
 import com.example.taxiBooking.repository.BookingRepository;
 import com.example.taxiBooking.repository.UserRepository;
@@ -13,9 +15,12 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class UserServiceTest {
@@ -43,4 +48,20 @@ public class UserServiceTest {
         SignUpResponse actualResponse=userService.register(signUpRequest);
         assertEquals(expectedResponse,actualResponse);
     }
+//    @Test
+//    void testUpdateAccount() {
+//
+//        Long userId = 1L;
+//        UpdateAccountRequest updateAccountRequest = new UpdateAccountRequest();
+//        User existingUser = new User();
+//        User updatedUser = new User();
+//        UpdateAccountResponse expectedResponse = new UpdateAccountResponse();
+//        when(modelMapper.map(updatedUser, UpdateAccountResponse.class)).thenReturn(expectedResponse);
+//        when(userRepository.save(existingUser)).thenReturn(updatedUser);
+//        UpdateAccountResponse actualResponse = userService.updateAccount(userId, updateAccountRequest);
+//        assertEquals(expectedResponse, actualResponse);
+//        verify(userRepository, times(1)).findById(userId);
+//        verify(userRepository, times(1)).save(existingUser);
+//        verify(modelMapper, times(1)).map(updatedUser, UpdateAccountResponse.class);
+//    }
 }
