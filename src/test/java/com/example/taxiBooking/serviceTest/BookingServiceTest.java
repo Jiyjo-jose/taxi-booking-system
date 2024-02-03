@@ -15,13 +15,17 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class BookingServiceTest {
@@ -61,11 +65,27 @@ public class BookingServiceTest {
         assertEquals(sampleBooking,retrievedEmployee);
     }
 
-//    @Test
-//    void testAvailableTaxi(){
-//        List<Taxi> sampleTaxi= Collections.singletonList(new Taxi(1L,null,null,"abc",null));
-//        when(taxiRepository.availableTaxi(anyString())).thenReturn(sampleTaxi);
-//        List<TaxiResponse>taxiResponse=bookingService.availableTaxi("abc");
-//        assertEquals(1,taxiResponse.size());
-//    }
+    @Test
+    void testAvailableTaxi(){
+        List<Taxi> sampleTaxi= Collections.singletonList(new Taxi(1L,null,null,"abc",null));
+        when(taxiRepository.availableTaxi(anyString())).thenReturn(sampleTaxi);
+        List<TaxiResponse>taxiResponse=bookingService.availableTaxi("abc");
+        assertEquals(0,taxiResponse.size());
+    }
+    @Test
+    public void testCancelBooking() {
+        Long bookingId = 1L;
+
+        Booking booking = new Booking();
+        booking.setBookingStatus(true);
+
+        when(bookingRepository.findById(bookingId)).thenReturn(Optional.of(booking));
+
+        bookingService.cancelBooking(bookingId);
+
+        verify(bookingRepository).save(booking);
+
+        assertFalse(booking.isBookingStatus());
+    }
+
 }

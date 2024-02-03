@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class BookingControllerTest {
@@ -53,5 +58,15 @@ public class BookingControllerTest {
         List<TaxiResponse> result = bookingController.availableTaxi(null);
         assertEquals(testResponses,result);
     }
+@Test
+void testCancelBooking() {
+    Long bookingId = 1L;
+    doNothing().when(bookingService).cancelBooking(bookingId);
+    ResponseEntity<String> responseEntity =
+            bookingController.cancelBooking(bookingId);
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    assertEquals("booking cancelled", responseEntity.getBody());
+    verify(bookingService, times(1)).cancelBooking( bookingId);
+}
 
 }

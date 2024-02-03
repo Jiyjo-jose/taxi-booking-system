@@ -1,19 +1,25 @@
 package com.example.taxiBooking.service;
 
+import com.example.taxiBooking.contract.request.LoginRequest;
 import com.example.taxiBooking.contract.request.SignUpRequest;
 import com.example.taxiBooking.contract.request.UpdateAccountRequest;
+import com.example.taxiBooking.contract.response.AuthResponse;
 import com.example.taxiBooking.contract.response.SignUpResponse;
 import com.example.taxiBooking.contract.response.UpdateAccountResponse;
+import com.example.taxiBooking.exception.BookingNotFoundException;
+import com.example.taxiBooking.exception.InvalidLoginException;
+import com.example.taxiBooking.exception.UserNotFoundException;
 import com.example.taxiBooking.model.Booking;
 import com.example.taxiBooking.model.User;
 import com.example.taxiBooking.repository.BookingRepository;
 import com.example.taxiBooking.repository.UserRepository;
 
+//import com.example.taxiBooking.security.JwtService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,7 +29,9 @@ public class UserService {
     private final ModelMapper modelMapper;
     private final BookingRepository bookingRepository;
 //    private final JwtService jwtService;
-//    private final AuthenticationManager authenticationManager;
+//    private final PasswordEncoder passwordEncoder;
+
+//   private final AuthenticationManager authenticationManager;
     public SignUpResponse register(SignUpRequest request) {
         User user= User.builder()
                 .name(request.getName())
@@ -33,10 +41,21 @@ public class UserService {
         userRepository.save(user);
         return modelMapper.map(user,SignUpResponse.class);
     }
-
+//    public AuthResponse login(LoginRequest request) throws Exception {
+//        String email = request.getEmail();
+//        String password = request.getPassword();
+//        if (!userRepository.existsByEmail(email)) {
+//            throw new EntityNotFoundException("Invalid login");
+//        }
+//        User user = userRepository.findByEmail(request.getEmail());
+//        if (passwordEncoder.matches(password, user.getPassword())) {
+//            return jwtService.generateToken(user);
+//        }
+//        throw new InvalidLoginException();
+//    }
     public UpdateAccountResponse updateAccount(Long id, UpdateAccountRequest request) {
         User user = userRepository.findById(id).orElseThrow(
-                ()-> new EntityNotFoundException()
+                ()-> new UserNotFoundException("user not found")
         );
         modelMapper.map(request,user);
         User updatedUser = userRepository.save(user);
@@ -46,13 +65,13 @@ public class UserService {
         Booking booking = bookingRepository
                 .findById(bookingId)
                 .orElseThrow(
-                        ()->new EntityNotFoundException("booking not found")
+                        ()->new BookingNotFoundException("booking not found")
                 );
         booking.setRideStatus(true);
         bookingRepository.save(booking);
         if(booking.isRideStatus(true)){
             bookingRepository.findById(bookingId)
-                    .orElseThrow(()-> new EntityNotFoundException());
+                    .orElseThrow(()-> new BookingNotFoundException("booking not found"));
             if(response.getAccountBalance()<booking.getFare()){
                 throw new RuntimeException("you don't have enough money for the ride sorry ");
             }
@@ -60,7 +79,7 @@ public class UserService {
             User User = userRepository
                     .findById(userId)
                     .orElseThrow(
-                            () -> new EntityNotFoundException()
+                            () -> new UserNotFoundException("user not found")
                     );
             User.setAccountBalance(accountBalance);
             userRepository.save(User);
