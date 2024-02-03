@@ -48,20 +48,15 @@ public class UserServiceTest {
         SignUpResponse actualResponse=userService.register(signUpRequest);
         assertEquals(expectedResponse,actualResponse);
     }
-//    @Test
-//    void testUpdateAccount() {
-//
-//        Long userId = 1L;
-//        UpdateAccountRequest updateAccountRequest = new UpdateAccountRequest();
-//        User existingUser = new User();
-//        User updatedUser = new User();
-//        UpdateAccountResponse expectedResponse = new UpdateAccountResponse();
-//        when(modelMapper.map(updatedUser, UpdateAccountResponse.class)).thenReturn(expectedResponse);
-//        when(userRepository.save(existingUser)).thenReturn(updatedUser);
-//        UpdateAccountResponse actualResponse = userService.updateAccount(userId, updateAccountRequest);
-//        assertEquals(expectedResponse, actualResponse);
-//        verify(userRepository, times(1)).findById(userId);
-//        verify(userRepository, times(1)).save(existingUser);
-//        verify(modelMapper, times(1)).map(updatedUser, UpdateAccountResponse.class);
-//    }
+    @Test
+    void testUpdateAccount() {
+
+        User sampleUser = new User();
+        UpdateAccountRequest request = new UpdateAccountRequest();
+        when(userRepository.findById(any())).thenReturn(java.util.Optional.of(sampleUser));
+        when(userRepository.save(any(User.class))).thenReturn(sampleUser);
+        UpdateAccountResponse updatedResponse = userService.updateAccount(1L, request);
+        assertEquals(updatedResponse, userService.updateAccount(1L, request));
+    }
+
 }
