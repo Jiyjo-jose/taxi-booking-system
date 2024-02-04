@@ -1,15 +1,14 @@
 package com.example.taxiBooking.service;
 
-//import com.example.taxiBooking.contract.request.LoginRequest;
 import com.example.taxiBooking.contract.request.SignUpRequest;
 import com.example.taxiBooking.contract.request.UpdateAccountRequest;
-//import com.example.taxiBooking.contract.response.AuthResponse;
 import com.example.taxiBooking.contract.response.SignUpResponse;
 import com.example.taxiBooking.contract.response.UpdateAccountResponse;
 //import com.example.taxiBooking.exception.BookingNotFoundException;
 //import com.example.taxiBooking.exception.InvalidLoginException;
 //import com.example.taxiBooking.exception.UserNotFoundException;
 import com.example.taxiBooking.exception.BookingNotFoundException;
+import com.example.taxiBooking.exception.InvalidLoginException;
 import com.example.taxiBooking.exception.LowAccountBalanceException;
 import com.example.taxiBooking.exception.UserNotFoundException;
 import com.example.taxiBooking.model.Booking;
@@ -17,12 +16,9 @@ import com.example.taxiBooking.model.User;
 import com.example.taxiBooking.repository.BookingRepository;
 import com.example.taxiBooking.repository.UserRepository;
 
-//import com.example.taxiBooking.security.JwtService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-//import org.springframework.security.authentication.AuthenticationManager;
-//import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,7 +40,16 @@ public class UserService {
         userRepository.save(user);
         return modelMapper.map(user,SignUpResponse.class);
     }
-//    public AuthResponse login(LoginRequest request) throws Exception {
+//    public LoginResponse userLogin(LoginRequest request) {
+//        User user = userRepository.findByEmail(request.getEmail());
+//        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+//            throw new UserNotFoundException("Login");
+//        }
+//        String jwtToken = jwtService.generateToken(user);
+//        return LoginResponse.builder().token(jwtToken).build();
+//    }
+
+    //    public AuthResponse login(@Valid LoginRequest request) throws Exception {
 //        String email = request.getEmail();
 //        String password = request.getPassword();
 //        if (!userRepository.existsByEmail(email)) {

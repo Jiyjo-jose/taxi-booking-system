@@ -21,7 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Taxi {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long taxiId;
 
     private String driverName;

@@ -1,37 +1,64 @@
 //package com.example.taxiBooking.security;
-//import com.example.taxiBooking.contract.response.AuthResponse;
 //import com.example.taxiBooking.model.User;
+//import com.example.taxiBooking.exception.UserNotFoundException;
 //import io.jsonwebtoken.Claims;
 //import io.jsonwebtoken.Jwts;
 //import io.jsonwebtoken.SignatureAlgorithm;
 //import io.jsonwebtoken.io.Decoders;
 //import io.jsonwebtoken.security.Keys;
-//import org.springframework.beans.factory.annotation.Value;
-//import org.springframework.security.core.userdetails.UserDetails;
-//import org.springframework.stereotype.Component;
-//
 //import java.security.Key;
 //import java.util.Date;
 //import java.util.HashMap;
 //import java.util.Map;
 //import java.util.function.Function;
+//import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.stereotype.Service;
 //
-//@Component
+//@Service
 //public class JwtService {
+//    private static final long expirationTime = 1000 * 60 * 60 * 24;
+//    private static final String secretKey =
+//            "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
 //
-//    @Value("${jwt.secret}")
-//    private String SECRET;
+//    public String generateToken(User userDetails) {
+//        Map<String, Object> claims = new HashMap<>();
+//        claims.put("id", userDetails.getId());
+//        claims.put("name", userDetails.getName());
+//        return Jwts.builder()
+//                .setClaims(claims)
+//                .setSubject(userDetails.getEmail())
+//                .setIssuedAt(new Date(System.currentTimeMillis()))
+//                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+//                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+//                .compact();
+//    }
 //
-//    ;
+//    private Key getSignInKey() {
+//        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+//        return Keys.hmacShaKeyFor(keyBytes);
+//    }
 //
-//    @Value("${jwt.expiry}")
-//    private Integer EXPIRY;
-//
-//    public String extractUsername(String token) {
+//    public String extractEmail(String token) {
 //        return extractClaim(token, Claims::getSubject);
 //    }
 //
-//    public Date extractExpiration(String token) {
+//    public boolean isTokenValid(String token, UserDetails userDetails) {
+//        final String username = extractEmail(token);
+//
+//        if (!username.equals(userDetails.getUsername())) {
+//            throw new UserNotFoundException("Login");
+//        }
+//        if (isTokenExpired(token)) {
+//            throw new UserNotFoundException("Login");
+//        }
+//        return true;
+//    }
+//
+//    private boolean isTokenExpired(String token) {
+//        return extractExpiration(token).before(new Date());
+//    }
+//
+//    private Date extractExpiration(String token) {
 //        return extractClaim(token, Claims::getExpiration);
 //    }
 //
@@ -42,40 +69,10 @@
 //
 //    private Claims extractAllClaims(String token) {
 //        return Jwts.parserBuilder()
-//                .setSigningKey(getSignKey())
+//                .setSigningKey(getSignInKey())
 //                .build()
 //                .parseClaimsJws(token)
 //                .getBody();
 //    }
-//
-//    private Boolean isTokenExpired(String token) {
-//        return extractExpiration(token).before(new Date());
-//    }
-//
-//    public Boolean validateToken(String token, UserDetails userDetails) {
-//        final String username = extractUsername(token);
-//        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-//    }
-//
-//    public AuthResponse generateToken(User user) {
-//        Map<String, Object> claims = new HashMap<>();
-//        return createToken(claims, user.getEmail());
-//    }
-//
-//    private AuthResponse createToken(Map<String, Object> claims, String userName) {
-//        String generatedToken =
-//                Jwts.builder()
-//                        .setClaims(claims)
-//                        .setSubject(userName)
-//                        .setIssuedAt(new Date(System.currentTimeMillis()))
-//                        .setExpiration(new Date(System.currentTimeMillis() + EXPIRY))
-//                        .signWith(getSignKey(), SignatureAlgorithm.HS256)
-//                        .compact();
-//        return AuthResponse.builder().name(userName).token(generatedToken).build();
-//    }
-//
-//    private Key getSignKey() {
-//        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
-//        return Keys.hmacShaKeyFor(keyBytes);
-//    }
 //}
+//
