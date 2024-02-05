@@ -3,6 +3,7 @@
 
 This is a Taxi Booking and Billing System using Spring Boot, which allows users to book taxis, calculate fares, and handle billing.
 
+
 ### Installation
 
 Clone the repository:https://github.com/Jiyjo-jose/taxi-booking-system
@@ -80,4 +81,6 @@ Endpoint: /v3/addTaxi
 Method: POST
 
 Description: add a new taxi.
+
+##### Swagger: http://localhost:8080/swagger-ui/index.html
 

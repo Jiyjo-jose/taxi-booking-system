@@ -1,5 +1,7 @@
 package com.example.taxiBooking;
 
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.OpenAPI;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.config.Configuration;
 import org.springframework.boot.SpringApplication;
@@ -20,5 +22,14 @@ public class TaxiBookingApplication {
 				.setFieldMatchingEnabled(true)
 				.setFieldAccessLevel(Configuration.AccessLevel.PRIVATE);
 		return mapper;
+	}
+	@Bean
+	public OpenAPI openAPI() {
+		return new OpenAPI()
+				.info(
+						new Info()
+								.title("TaxiBookingApplication")
+								.description("Agile Method")
+								.version("1.0"));
 	}
 }

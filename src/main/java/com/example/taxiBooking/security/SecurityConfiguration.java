@@ -16,7 +16,7 @@
 //@RequiredArgsConstructor
 //@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 //public class SecurityConfiguration {
-//
+////
 //    private final AuthenticationProvider authenticationProvider;
 //    private final JwtAuthenticationFilter jwtAuthFilter;
 //
