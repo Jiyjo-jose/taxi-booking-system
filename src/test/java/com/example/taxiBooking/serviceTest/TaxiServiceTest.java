@@ -39,4 +39,5 @@ public class TaxiServiceTest {
         TaxiResponse actualResponse=taxiService.addTaxi(taxiRequest);
         assertEquals(expectedResponse,actualResponse);
     }
+
 }

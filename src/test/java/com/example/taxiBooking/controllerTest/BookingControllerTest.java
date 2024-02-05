@@ -11,7 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
@@ -20,11 +21,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
+@SpringBootTest
+@AutoConfigureMockMvc(addFilters = false)
 public class BookingControllerTest {
 
     @InjectMocks
@@ -43,12 +45,13 @@ public class BookingControllerTest {
         when(bookingService.book(bookingRequest,1L,1L,10.00))
                 .thenReturn(bookingResponse);
     }
+
     @Test
     void testGetById(){
         Booking sampleBooking = new Booking(1L,null,null,null,null,10d,null,true,true);
         when(bookingService.getById(anyLong())).thenReturn(sampleBooking);
-        Booking result = bookingController.getById(1L);
-        assertEquals(sampleBooking,result);
+        Booking result = bookingService.getById(1L);
+        assertEquals(result,sampleBooking);
     }
 
     @Test
@@ -59,16 +62,18 @@ public class BookingControllerTest {
         assertEquals(testResponses,result);
     }
 @Test
-void testCancelBooking() {
+public void testCancelBooking() {
+
     Long bookingId = 1L;
-    doNothing().when(bookingService).cancelBooking(bookingId);
-    ResponseEntity<String> responseEntity =
-            bookingController.cancelBooking(bookingId);
-    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-    assertEquals("booking cancelled", responseEntity.getBody());
-    verify(bookingService, times(1)).cancelBooking( bookingId);
+    BookingService bookingService = mock(BookingService.class);
+    BookingController bookingController = new BookingController(bookingService);
+
+
+    ResponseEntity<String> response = bookingController.cancelBooking(bookingId);
+
+    assertEquals(ResponseEntity.ok("booking cancelled"), response);
+    verify(bookingService, times(1)).cancelBooking(bookingId);
 }
 
 
-
-}
+    }

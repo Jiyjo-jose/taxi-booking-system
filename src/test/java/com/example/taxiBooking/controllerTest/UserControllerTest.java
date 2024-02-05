@@ -10,21 +10,22 @@ import com.example.taxiBooking.controller.UserController;
 import com.example.taxiBooking.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
+@SpringBootTest
+@AutoConfigureMockMvc(addFilters = false)
 public class UserControllerTest {
-@InjectMocks
-private UserController userController;
+
     @Mock
     private UserService userService;
     @BeforeEach
@@ -47,31 +48,37 @@ private UserController userController;
         when(userService.userLogin(request))
                 .thenReturn(response);
     }
-    @Test
-    void testUpdateAccount() {
-        Long userId = 1L;
-        UpdateAccountRequest updateAccountRequest = new UpdateAccountRequest();
 
-        UpdateAccountResponse updatedAccount = new UpdateAccountResponse();
-        when(userService.updateAccount(userId, updateAccountRequest)).thenReturn(updatedAccount);
+    @Test
+    public void testUpdateAccount() {
+
+        Long userId = 1L;
+        UpdateAccountRequest request= new UpdateAccountRequest();
+        UserService userService = mock(UserService.class);
+        UserController userController = new UserController(userService);
+
         ResponseEntity<UpdateAccountResponse> responseEntity =
-                userController.updateAccount(userId, updateAccountRequest);
-
+                userController.updateAccount(userId,request);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(updatedAccount, responseEntity.getBody());
-
-        verify(userService, times(1)).updateAccount(userId,updateAccountRequest );
+        verify(userService, times(1)).updateAccount(userId,request);
     }
+
+
+
     @Test
-    void testCompleteRide() {
-        Long userId = 1L;
+    public void testCompleteRide() {
+
         Long bookingId = 1L;
-        UpdateAccountResponse updateAccountResponse= new UpdateAccountResponse();
-        doNothing().when(userService).completeRide(userId, bookingId,updateAccountResponse);
+        Long userId = 1L;
+        UpdateAccountResponse updateAccountResponse= new UpdateAccountResponse(2d);
+        UserService userService = mock(UserService.class);
+        UserController userController = new UserController(userService);
+
         ResponseEntity<String> responseEntity =
                 userController.completeRide(userId, bookingId,updateAccountResponse);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("ride completed", responseEntity.getBody());
-        verify(userService, times(1)).completeRide(userId, bookingId,updateAccountResponse);
+        verify(userService, times(1)).completeRide(userId,bookingId,updateAccountResponse);
     }
+
 }

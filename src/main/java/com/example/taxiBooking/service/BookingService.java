@@ -33,15 +33,16 @@ public class BookingService {
     private final TaxiRepository taxiRepository;
 
     public BookingResponse book(BookingRequest request, Long UserId, Long TaxiId, double distance) {
+
+        Taxi  taxi =taxiRepository
+                .findById(TaxiId)
+                .orElseThrow(
+                        ()-> new TaxiNotFoundException(" not available near pickup location")
+                );
         User  user = userRepository
                 .findById(UserId)
                 .orElseThrow(
                         ()-> new UserNotFoundException("user not found")
-        );
-        Taxi  taxi =taxiRepository
-                .findById(TaxiId)
-                .orElseThrow(
-                        ()-> new TaxiNotFoundException()
                 );
         double basicFare= 100.00;
         double fare = basicFare + ((distance-5)*20.00);
@@ -80,7 +81,7 @@ public class BookingService {
         return bookingRepository
                 .findById(id)
                 .orElseThrow(
-                        ()-> new BookingNotFoundException("Booking Not Found"));
+                        ()-> new BookingNotFoundException("booking not found"));
     }
 
     public void cancelBooking(Long id) {
@@ -92,6 +93,7 @@ public class BookingService {
         booking.setBookingStatus(false);
         bookingRepository.save(booking);
     }
+
 
 
 }

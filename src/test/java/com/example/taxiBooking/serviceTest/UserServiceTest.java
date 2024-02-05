@@ -5,6 +5,7 @@ import com.example.taxiBooking.contract.request.SignUpRequest;
 import com.example.taxiBooking.contract.request.UpdateAccountRequest;
 import com.example.taxiBooking.contract.response.SignUpResponse;
 import com.example.taxiBooking.contract.response.UpdateAccountResponse;
+import com.example.taxiBooking.exception.BookingNotFoundException;
 import com.example.taxiBooking.exception.UserNotFoundException;
 import com.example.taxiBooking.model.Booking;
 import com.example.taxiBooking.model.User;
@@ -26,6 +27,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -82,6 +86,23 @@ public class UserServiceTest {
         assertEquals(updatedResponse, userService.updateAccount(1L, request));
     }
     @Test
+    void testUpdateAccountWhenUserNotFound() {
+
+        Long userId = 1L;
+        UpdateAccountRequest request= new UpdateAccountRequest();
+        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class,
+                () -> userService.updateAccount(userId,request));
+
+        verify(userRepository, times(1)).findById(userId);
+
+        verify(userRepository, never()).save(any());
+
+        assertEquals("user not found", exception.getMessage());
+    }
+
+    @Test
     public void testCompleteRide() {
         Long userId = 1L;
         Long bookingId = 1L;
@@ -102,6 +123,41 @@ public class UserServiceTest {
 
         assertTrue(booking.isRideStatus(true));
     }
+    @Test
+    void testCompleteRideWhenBookingNotFound() {
+
+        Long bookingId = 1L;
+        Long userId =1L;
+        UpdateAccountResponse response= new UpdateAccountResponse();
+        when(bookingRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        BookingNotFoundException exception = assertThrows(BookingNotFoundException.class,
+                () -> userService.completeRide(userId,bookingId,response));
+
+        verify(bookingRepository, times(1)).findById(bookingId);
+
+        verify(bookingRepository, never()).save(any());
+
+        assertEquals("booking not found", exception.getMessage());
+    }
+//    @Test
+//    void testCompleteRideWhenUserNotFound() {
+//
+//        Long bookingId = 1L;
+//        Long userId =1L;
+//        UpdateAccountResponse response= new UpdateAccountResponse();
+//        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+//
+//        UserNotFoundException exception = assertThrows(UserNotFoundException.class,
+//                () -> userService.completeRide(userId,bookingId,response));
+//
+//        verify(userRepository, times(1)).findById(bookingId);
+//
+//        verify(userRepository, never()).save(any());
+//
+//        assertEquals("user not found", exception.getMessage());
+//    }
+//
 
 
 }
