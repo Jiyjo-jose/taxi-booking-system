@@ -16,6 +16,4 @@ public class SignUpRequest {
 
     @NotBlank(message = "password cannot be blank")
     private String password;
-
-
 }

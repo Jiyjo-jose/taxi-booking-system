@@ -1,7 +1,9 @@
 package com.example.taxiBooking.controllerTest;
 
+import com.example.taxiBooking.contract.request.LoginRequest;
 import com.example.taxiBooking.contract.request.SignUpRequest;
 import com.example.taxiBooking.contract.request.UpdateAccountRequest;
+import com.example.taxiBooking.contract.response.LoginResponse;
 import com.example.taxiBooking.contract.response.SignUpResponse;
 import com.example.taxiBooking.contract.response.UpdateAccountResponse;
 import com.example.taxiBooking.controller.UserController;
@@ -37,6 +39,13 @@ private UserController userController;
         SignUpResponse signUpResponse = new SignUpResponse(1L,null,null,null);
         when(userService.register(signUpRequest))
                 .thenReturn(signUpResponse);
+    }
+    @Test
+    void testLogin(){
+        LoginRequest request = new LoginRequest(null,null);
+        LoginResponse response = new LoginResponse(null);
+        when(userService.userLogin(request))
+                .thenReturn(response);
     }
     @Test
     void testUpdateAccount() {

@@ -1,7 +1,5 @@
 package com.example.taxiBooking.model;
 
-
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -40,9 +38,14 @@ public class Booking {
     private double fare;
     private LocalDateTime bookingTime;
 
-    private boolean bookingStatus;
+    private  boolean bookingStatus;
 
     private boolean rideStatus;
+
+    public  boolean  getBookingStatus(boolean b) {
+
+        return  bookingStatus;
+    }
 
     public void setBookingStatus(boolean status) {
         this.bookingStatus = status;

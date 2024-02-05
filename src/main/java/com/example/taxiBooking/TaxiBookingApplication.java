@@ -23,13 +23,13 @@ public class TaxiBookingApplication {
 				.setFieldAccessLevel(Configuration.AccessLevel.PRIVATE);
 		return mapper;
 	}
-	@Bean
-	public OpenAPI openAPI() {
-		return new OpenAPI()
-				.info(
-						new Info()
-								.title("TaxiBookingApplication")
-								.description("Agile Method")
-								.version("1.0"));
-	}
+//	@Bean
+//	public OpenAPI openAPI() {
+//		return new OpenAPI()
+//				.info(
+//						new Info()
+//								.title("TaxiBookingApplication")
+//								.description("Agile Method")
+//								.version("1.0"));
+//	}
 }
