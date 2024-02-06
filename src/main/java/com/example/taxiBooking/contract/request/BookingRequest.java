@@ -1,10 +1,14 @@
 package com.example.taxiBooking.contract.request;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@NoArgsConstructor
 @AllArgsConstructor
+@Setter
 public class BookingRequest {
     private String pickUpLocation;
     private String dropOffLocation;

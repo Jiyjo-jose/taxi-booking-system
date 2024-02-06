@@ -1,8 +1,12 @@
 package com.example.taxiBooking.contract.request;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UpdateAccountRequest {
     private double accountBalance;
 }

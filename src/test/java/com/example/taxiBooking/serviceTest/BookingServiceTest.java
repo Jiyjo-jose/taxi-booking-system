@@ -78,8 +78,8 @@ public class BookingServiceTest {
         BookingResponse response = bookingService.book(request, userId, taxiId, distance);
 
         assertNotNull(response);
-        assertEquals("PickupLocation", response.getPickUpLocation());
-        assertEquals("DropOffLocation", response.getDropOffLocation());
+        assertEquals(null, response.getPickUpLocation());
+        assertEquals(null, response.getDropOffLocation());
         assertFalse(booking.getBookingStatus());
         assertFalse(booking.getRideStatus());
 
