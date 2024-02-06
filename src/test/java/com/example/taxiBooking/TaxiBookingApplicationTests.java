@@ -9,5 +9,10 @@ class TaxiBookingApplicationTests {
 	@Test
 	void contextLoads() {
 	}
+	@Test
+	public void main()
+	{
+		TaxiBookingApplication.main(new String[]{});
+	}
 
 }

@@ -42,9 +42,13 @@ public class Booking {
 
     private boolean rideStatus;
 
-    public  boolean  getBookingStatus(boolean b) {
+    public  boolean  getBookingStatus() {
 
         return  bookingStatus;
+    }
+    public  boolean  getRideStatus() {
+
+        return  rideStatus;
     }
 
     public void setBookingStatus(boolean status) {

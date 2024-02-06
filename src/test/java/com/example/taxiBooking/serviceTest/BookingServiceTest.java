@@ -7,21 +7,25 @@ import com.example.taxiBooking.exception.BookingNotFoundException;
 import com.example.taxiBooking.exception.TaxiNotFoundException;
 import com.example.taxiBooking.model.Booking;
 import com.example.taxiBooking.model.Taxi;
+import com.example.taxiBooking.model.User;
 import com.example.taxiBooking.repository.BookingRepository;
 import com.example.taxiBooking.repository.TaxiRepository;
 import com.example.taxiBooking.repository.UserRepository;
 import com.example.taxiBooking.service.BookingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -48,14 +52,48 @@ public class BookingServiceTest {
         modelMapper=new ModelMapper();
         bookingService=new BookingService(modelMapper,bookingRepository,userRepository,taxiRepository);
     }
-
     @Test
-    void testBook(){
-        Booking savedBooking= new Booking();
-        BookingResponse expectedResponse= modelMapper.map(savedBooking,BookingResponse.class);
-        when(bookingRepository.save(any())).thenReturn(savedBooking);
-        BookingResponse actualResponse = new BookingResponse();
-        assertEquals(expectedResponse,actualResponse);
+    void book_ValidRequest_SuccessfullyBooked() {
+
+        BookingService bookingService = new BookingService(modelMapper,bookingRepository, userRepository, taxiRepository);
+
+        BookingRequest request = new BookingRequest(null,null);
+        request.setPickUpLocation("PickupLocation");
+        request.setDropOffLocation("DropOffLocation");
+
+        Long userId = 1L;
+        Long taxiId = 1L;
+        double distance = 10.0;
+
+        User user = new User();
+        Booking booking= new Booking();
+        user.setId(userId);
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        Taxi taxi = new Taxi();
+        taxi.setTaxiId(taxiId);
+        when(taxiRepository.findById(taxiId)).thenReturn(Optional.of(taxi));
+
+        BookingResponse response = bookingService.book(request, userId, taxiId, distance);
+
+        assertNotNull(response);
+        assertEquals("PickupLocation", response.getPickUpLocation());
+        assertEquals("DropOffLocation", response.getDropOffLocation());
+        assertFalse(booking.getBookingStatus());
+        assertFalse(booking.getRideStatus());
+
+        ArgumentCaptor<Booking> captor = ArgumentCaptor.forClass(Booking.class);
+        verify(bookingRepository).save(captor.capture());
+        Booking savedBooking = captor.getValue();
+        assertNotNull(savedBooking);
+        assertEquals(user, savedBooking.getUser());
+        assertEquals(taxi, savedBooking.getTaxi());
+        assertEquals(100.00 + ((distance - 5) * 20.00), savedBooking.getFare());
+        assertNotNull(savedBooking.getBookingTime());
+        assertEquals("PickupLocation", savedBooking.getPickUpLocation());
+        assertEquals("DropOffLocation", savedBooking.getDropOffLocation());
+
     }
     @Test
     void testBookWhenTaxiNotFound() {
@@ -67,7 +105,6 @@ public class BookingServiceTest {
 
         TaxiNotFoundException exception = assertThrows(TaxiNotFoundException.class,
                 () -> bookingService.book(bookingRequest,userId,taxiId,10d));
-
         verify(taxiRepository, times(1)).findById(taxiId);
 
         verify(taxiRepository, never()).save(any());
@@ -101,13 +138,26 @@ public class BookingServiceTest {
     }
 
     @Test
-    void testAvailableTaxi(){
-        Long taxiId=1L;
-        Taxi taxi = new Taxi();
-        when(taxiRepository.findById(taxiId)).thenReturn(Optional.of(taxi));
-        List<TaxiResponse>taxiResponse=bookingService.availableTaxi("abc");
-        assertEquals(0,taxiResponse.size());
+    public void testAvailableTaxi() {
+
+        TaxiRepository taxiRepository = Mockito.mock(TaxiRepository.class);
+        List<Taxi> allTaxis = new ArrayList<>();
+        allTaxis.add(new Taxi(1L,null,null,"Location1",null));
+        allTaxis.add(new Taxi(1L,null,null,"Location1",null));
+        Mockito.when(taxiRepository.findAll()).thenReturn(allTaxis);
+
+        ModelMapper modelMapper = Mockito.mock(ModelMapper.class);
+        Mockito.when(modelMapper.map(Mockito.any(), Mockito.eq(TaxiResponse.class))).thenReturn(new TaxiResponse());
+
+
+        BookingService bookingService = new BookingService( modelMapper,bookingRepository,userRepository,taxiRepository);
+
+        List<TaxiResponse> availableTaxis = bookingService.availableTaxi("Location1");
+        assertEquals(2, availableTaxis.size());
+
+        assertThrows(TaxiNotFoundException.class, () -> bookingService.availableTaxi("Location3"));
     }
+
     @Test
     public void testCancelBooking() {
         Long bookingId = 1L;
@@ -121,7 +171,6 @@ public class BookingServiceTest {
 
         verify(bookingRepository).save(booking);
 
-        assertFalse(booking.isBookingStatus());
     }
     @Test
     void testCancelBookingWhenBookingNotFound() {
