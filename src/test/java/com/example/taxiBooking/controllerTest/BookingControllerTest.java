@@ -5,11 +5,9 @@ import com.example.taxiBooking.contract.response.BookingResponse;
 import com.example.taxiBooking.contract.response.TaxiResponse;
 import com.example.taxiBooking.controller.BookingController;
 import com.example.taxiBooking.model.Booking;
-import com.example.taxiBooking.repository.TaxiRepository;
 import com.example.taxiBooking.service.BookingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,16 +19,19 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -43,13 +44,30 @@ public class BookingControllerTest {
     @MockBean
     private BookingService bookingService;
 
-    @Test
-    void testBook() {
-        BookingRequest bookingRequest = new BookingRequest("asda", "dasd");
-        BookingResponse bookingResponse =
-                new BookingResponse(1L, "ADS", "da",  LocalDateTime.now(),10d);
-        when(bookingService.book(bookingRequest, 1L, 1L, 10d)).thenReturn(bookingResponse);
-    }
+
+@Test
+void testBookTaxi() throws Exception {
+    BookingRequest bookingRequest = new BookingRequest("Aluva", "Kakkanad");
+    Long taxiId = 1L;
+    Long userId = 1L;
+    double distance = 80d;
+    BookingResponse expectedResponse =
+            new BookingResponse();
+
+    when(bookingService.book(any(BookingRequest.class), anyLong(), anyLong(),anyDouble()))
+            .thenReturn(expectedResponse);
+
+    mockMvc.perform(
+                    post("/v2/booking")
+                            .param("userId",String.valueOf(userId))
+                            .param("taxiId", String.valueOf(taxiId))
+                            .param("distance", String.valueOf(distance))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(new ObjectMapper().writeValueAsString(bookingRequest)))
+            .andExpect(status().isOk())
+            .andExpect(content().json(new ObjectMapper().writeValueAsString(expectedResponse)));
+}
+
 
 
     @Test
