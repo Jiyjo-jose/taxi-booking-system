@@ -24,11 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/registration")
+    @PostMapping("/user/registration")
     public ResponseEntity<SignUpResponse> register(@Valid @RequestBody SignUpRequest request){
         return ResponseEntity.ok(userService.register(request));
     }
-    @PostMapping("/login")
+    @PostMapping("/user/login")
     public LoginResponse userLogin(@Valid @RequestBody LoginRequest request) {
         return userService.userLogin(request);
     }

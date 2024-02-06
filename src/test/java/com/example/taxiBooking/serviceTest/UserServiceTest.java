@@ -6,6 +6,7 @@ import com.example.taxiBooking.contract.request.UpdateAccountRequest;
 import com.example.taxiBooking.contract.response.SignUpResponse;
 import com.example.taxiBooking.contract.response.UpdateAccountResponse;
 import com.example.taxiBooking.exception.BookingNotFoundException;
+import com.example.taxiBooking.exception.LowAccountBalanceException;
 import com.example.taxiBooking.exception.UserNotFoundException;
 import com.example.taxiBooking.model.Booking;
 import com.example.taxiBooking.model.User;
@@ -140,6 +141,17 @@ public class UserServiceTest {
 
         assertEquals("booking not found", exception.getMessage());
     }
+
+    @Test
+    public void testLowAccountBalanceException() {
+        String expectedMessage = " you don't have enough money for the ride sorry ";
+        LowAccountBalanceException exception = assertThrows(LowAccountBalanceException.class, () -> {
+            throw new LowAccountBalanceException();
+        });
+
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
 //    @Test
 //    void testCompleteRideWhenUserNotFound() {
 //

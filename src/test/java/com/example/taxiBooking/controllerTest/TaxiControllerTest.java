@@ -3,28 +3,46 @@ package com.example.taxiBooking.controllerTest;
 import com.example.taxiBooking.contract.request.TaxiRequest;
 import com.example.taxiBooking.contract.response.TaxiResponse;
 import com.example.taxiBooking.service.TaxiService;
-import org.junit.jupiter.api.BeforeEach;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-@SpringBootTest
-public class TaxiControllerTest {
-    @Mock
-    private TaxiService taxiService;
-    @BeforeEach
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-    public  void setUp(){
-        MockitoAnnotations.openMocks(this);
-    }
+@SpringBootTest
+
+@AutoConfigureMockMvc(addFilters = false)
+public class TaxiControllerTest {
+    @Autowired
+    private MockMvc mockMvc;
+    @MockBean
+    private TaxiService taxiService;
+
     @Test
-    void testRegister(){
-        TaxiRequest taxiRequest= new TaxiRequest(null,null,null);
-        TaxiResponse taxiResponse = new TaxiResponse(1L,null,null,null);
-        when(taxiService.addTaxi(taxiRequest))
-                .thenReturn(taxiResponse);
+    void testAddTaxi() throws Exception {
+        TaxiRequest request = new TaxiRequest("Name", "123ABC", "Location1");
+        TaxiResponse expectedResponse = new TaxiResponse(1L, "Name", "123ABC", "Location1");
+
+        when(taxiService.addTaxi(any(TaxiRequest.class))).thenReturn(expectedResponse);
+
+        mockMvc.perform(
+                        post("/v3/addTaxi")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(new ObjectMapper().writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(new ObjectMapper().writeValueAsString(expectedResponse)));
     }
+
 
 }

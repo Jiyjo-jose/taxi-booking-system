@@ -8,48 +8,71 @@ import com.example.taxiBooking.contract.response.SignUpResponse;
 import com.example.taxiBooking.contract.response.UpdateAccountResponse;
 import com.example.taxiBooking.controller.UserController;
 import com.example.taxiBooking.service.UserService;
-import org.junit.jupiter.api.BeforeEach;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 public class UserControllerTest {
 
-    @Mock
+
+    @Autowired
+    private MockMvc mockMvc;
+    @MockBean
     private UserService userService;
-    @BeforeEach
-
-    public  void setUp(){
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
-    void testRegister(){
-        SignUpRequest signUpRequest= new SignUpRequest(null,null,null);
-        SignUpResponse signUpResponse = new SignUpResponse(1L,null,null,null);
-        when(userService.register(signUpRequest))
-                .thenReturn(signUpResponse);
-    }
-    @Test
-    void testLogin(){
-        LoginRequest request = new LoginRequest(null,null);
-        LoginResponse response = new LoginResponse(null);
-        when(userService.userLogin(request))
-                .thenReturn(response);
-    }
+    void testRegister() throws Exception {
 
+        SignUpRequest request = new SignUpRequest("null", "email@email", "null");
+        SignUpResponse expectedResponse = new SignUpResponse(1L, "null", "email@email",null);
+
+        when(userService.register(any(SignUpRequest.class))).thenReturn(expectedResponse);
+
+        mockMvc.perform(
+                        post("/v1/user/registration")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(new ObjectMapper().writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(new ObjectMapper().writeValueAsString(expectedResponse)));
+    }
     @Test
+    void testLogin() throws Exception {
+        LoginRequest loginRequest = new LoginRequest("sharok23@gmail.com", "Helloworld");
+        LoginResponse expectedResponse =
+                new LoginResponse(
+                        "eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoic2hhcm9rIiwiaWQiOjIsInN1YiI6IjJAZ21haWwuY29tIiwiaWF0IjoxNzA2OTM5Njg3LCJleHAiOjE3MDcwMjYwODd9.FhuhQzgMlXpdCyEJ0hfm8VNbvBYgv6eeZcwhpacfQEg");
+        when(userService.userLogin(any(LoginRequest.class))).thenReturn(expectedResponse);
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post("/v1/user/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(new ObjectMapper().writeValueAsString(loginRequest)))
+                .andExpect(status().isOk())
+                .andExpect(content().json(new ObjectMapper().writeValueAsString(expectedResponse)));
+    }
+@Test
     public void testUpdateAccount() {
 
         Long userId = 1L;

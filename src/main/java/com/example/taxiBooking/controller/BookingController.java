@@ -27,8 +27,8 @@ public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping("/booking")
-    public ResponseEntity<BookingResponse> book(@Valid @RequestBody BookingRequest request , @RequestParam Long userId, @RequestParam Long taxiId, @RequestParam double distance){
-        return ResponseEntity.ok(bookingService.book(request,userId,taxiId,distance));
+    public BookingResponse book(@Valid @RequestBody BookingRequest request , @RequestParam Long userId, @RequestParam Long taxiId, @RequestParam double distance){
+        return (bookingService.book(request,userId,taxiId,distance));
     }
     @GetMapping("/{id}/viewBooking")
     public Booking getById(@PathVariable Long id){
@@ -43,7 +43,6 @@ public class BookingController {
     public List<TaxiResponse> availableTaxi( @RequestParam String pickupLocation) {
         return bookingService.availableTaxi( pickupLocation);
     }
-
 
 
 }
