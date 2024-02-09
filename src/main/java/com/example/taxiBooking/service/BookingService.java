@@ -12,14 +12,13 @@ import com.example.taxiBooking.model.User;
 import com.example.taxiBooking.repository.BookingRepository;
 import com.example.taxiBooking.repository.TaxiRepository;
 import com.example.taxiBooking.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -31,38 +30,43 @@ public class BookingService {
 
     public BookingResponse book(BookingRequest request, Long UserId, Long TaxiId, double distance) {
 
-        Taxi  taxi =taxiRepository
-                .findById(TaxiId)
-                .orElseThrow(
-                        ()-> new TaxiNotFoundException(" not available near pickup location")
-                );
-        User  user = userRepository
-                .findById(UserId)
-                .orElseThrow(
-                        ()-> new UserNotFoundException("user not found")
-                );
-        double fare = ((distance)*30.00);
-        Booking booking1= Booking.builder()
-                .user(user)
-                .taxi(taxi)
-                .fare(fare)
-                .bookingTime(LocalDateTime.now())
-                .pickUpLocation(request.getPickUpLocation())
-                .dropOffLocation(request.getDropOffLocation())
-                .bookingStatus(true)
-                .rideStatus(false)
-                .build();
+        Taxi taxi =
+                taxiRepository
+                        .findById(TaxiId)
+                        .orElseThrow(
+                                () ->
+                                        new TaxiNotFoundException(
+                                                " not available near pickup location"));
+        User user =
+                userRepository
+                        .findById(UserId)
+                        .orElseThrow(() -> new UserNotFoundException("user not found"));
+        double fare = ((distance) * 30.00);
+        Booking booking1 =
+                Booking.builder()
+                        .user(user)
+                        .taxi(taxi)
+                        .fare(fare)
+                        .bookingTime(LocalDateTime.now())
+                        .pickUpLocation(request.getPickUpLocation())
+                        .dropOffLocation(request.getDropOffLocation())
+                        .bookingStatus(true)
+                        .rideStatus(false)
+                        .build();
         bookingRepository.save(booking1);
-        return modelMapper.map(booking1,BookingResponse.class);
+        return modelMapper.map(booking1, BookingResponse.class);
     }
+
     public List<TaxiResponse> availableTaxi(String pickupLocation) {
 
-        List<Taxi> availableTaxis = taxiRepository.findAll().stream()
-                .filter(taxi -> pickupLocation.equals(taxi.getCurrentLocation()))
-                .collect(Collectors.toList());
+        List<Taxi> availableTaxis =
+                taxiRepository.findAll().stream()
+                        .filter(taxi -> pickupLocation.equals(taxi.getCurrentLocation()))
+                        .collect(Collectors.toList());
 
         if (availableTaxis.isEmpty()) {
-            throw new TaxiNotFoundException("No available taxis found at pickup location: " + pickupLocation);
+            throw new TaxiNotFoundException(
+                    "No available taxis found at pickup location: " + pickupLocation);
         }
 
         return availableTaxis.stream()
@@ -70,23 +74,19 @@ public class BookingService {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
+
     public Booking getById(Long id) {
         return bookingRepository
                 .findById(id)
-                .orElseThrow(
-                        ()-> new BookingNotFoundException("booking not found"));
+                .orElseThrow(() -> new BookingNotFoundException("booking not found"));
     }
 
     public void cancelBooking(Long id) {
-        Booking booking = bookingRepository
-                .findById(id)
-                .orElseThrow(
-                        ()->new BookingNotFoundException("booking not found")
-                );
+        Booking booking =
+                bookingRepository
+                        .findById(id)
+                        .orElseThrow(() -> new BookingNotFoundException("booking not found"));
         booking.setBookingStatus(false);
         bookingRepository.save(booking);
     }
-
-
-
 }

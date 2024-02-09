@@ -25,22 +25,28 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/user/registration")
-    public ResponseEntity<SignUpResponse> register(@Valid @RequestBody SignUpRequest request){
+    public ResponseEntity<SignUpResponse> register(@Valid @RequestBody SignUpRequest request) {
         return ResponseEntity.ok(userService.register(request));
     }
+
     @PostMapping("/user/login")
     public LoginResponse userLogin(@Valid @RequestBody LoginRequest request) {
         return userService.userLogin(request);
     }
 
     @PutMapping("/{id}/updateAccountBalance")
-    public ResponseEntity<UpdateAccountResponse>updateAccount(@PathVariable Long id, @RequestBody UpdateAccountRequest request){
-        UpdateAccountResponse response= userService.updateAccount(id,request);
+    public ResponseEntity<UpdateAccountResponse> updateAccount(
+            @PathVariable Long id, @RequestBody UpdateAccountRequest request) {
+        UpdateAccountResponse response = userService.updateAccount(id, request);
         return ResponseEntity.ok(response);
     }
-        @PutMapping("/rideCompleted")
-    public ResponseEntity<String> completeRide(@RequestParam Long userId, @RequestParam Long bookingId, @RequestBody UpdateAccountResponse response){
-        userService.completeRide(userId,bookingId, response);
+
+    @PutMapping("/rideCompleted")
+    public ResponseEntity<String> completeRide(
+            @RequestParam Long userId,
+            @RequestParam Long bookingId,
+            @RequestBody UpdateAccountResponse response) {
+        userService.completeRide(userId, bookingId, response);
         return ResponseEntity.ok("ride completed");
     }
 }

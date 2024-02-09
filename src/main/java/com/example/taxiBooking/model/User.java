@@ -7,6 +7,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,10 +17,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -34,6 +33,7 @@ public class User implements UserDetails {
     private String name;
     private String email;
     private String password;
+
     @OneToMany
     @JoinColumn(name = "booking_id")
     private List<Booking> booking;
@@ -41,31 +41,37 @@ public class User implements UserDetails {
     private double accountBalance;
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities(){
+    public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.emptyList();
     }
+
     @Override
-    public String getUsername(){
+    public String getUsername() {
         return email;
     }
+
     @Override
-    public boolean isAccountNonExpired(){
-        return  false;
-    }
-    @Override
-    public boolean isAccountNonLocked(){
+    public boolean isAccountNonExpired() {
         return false;
     }
+
     @Override
-    public boolean isCredentialsNonExpired(){
+    public boolean isAccountNonLocked() {
         return false;
     }
+
     @Override
-    public boolean isEnabled(){
+    public boolean isCredentialsNonExpired() {
         return false;
     }
+
     @Override
-    public String getPassword(){
-        return  password;
+    public boolean isEnabled() {
+        return false;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
     }
 }

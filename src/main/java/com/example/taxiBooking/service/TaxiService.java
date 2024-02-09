@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-
 @Service
 @RequiredArgsConstructor
 public class TaxiService {
@@ -17,12 +16,13 @@ public class TaxiService {
 
     public TaxiResponse addTaxi(TaxiRequest request) {
 
-        Taxi taxi= Taxi.builder()
-                .driverName(request.getDriverName())
-                .licenseNumber(request.getLicenseNumber())
-                .currentLocation(request.getCurrentLocation())
-                .build();
+        Taxi taxi =
+                Taxi.builder()
+                        .driverName(request.getDriverName())
+                        .licenseNumber(request.getLicenseNumber())
+                        .currentLocation(request.getCurrentLocation())
+                        .build();
         taxiRepository.save(taxi);
-        return modelMapper.map(taxi,TaxiResponse.class);
+        return modelMapper.map(taxi, TaxiResponse.class);
     }
 }

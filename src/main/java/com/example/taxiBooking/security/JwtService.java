@@ -1,8 +1,7 @@
 package com.example.taxiBooking.security;
 
-
-import com.example.taxiBooking.model.User;
 import com.example.taxiBooking.exception.UserNotFoundException;
+import com.example.taxiBooking.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -21,6 +20,7 @@ public class JwtService {
 
     private static final long expirationTime = 1000 * 60 * 60 * 24;
     private static final String secretKey = System.getenv("SECRET_KEY");
+
     public String generateToken(User userDetails) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", userDetails.getId());

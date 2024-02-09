@@ -13,7 +13,5 @@ import lombok.NoArgsConstructor;
 public class SignUpResponse {
     private Long id;
     private String name;
-    @Email
-    private String email;
-
+    @Email private String email;
 }

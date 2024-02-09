@@ -6,13 +6,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -24,6 +23,7 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -34,17 +34,16 @@ public class Booking {
 
     private String pickUpLocation;
 
-    private  String dropOffLocation;
+    private String dropOffLocation;
     private double fare;
     private LocalDateTime bookingTime;
 
-    private  boolean bookingStatus;
+    private boolean bookingStatus;
 
     private boolean rideStatus;
+
     public boolean isRideStatus(boolean b) {
-        this.rideStatus =b;
+        this.rideStatus = b;
         return b;
     }
-
-
 }

@@ -83,4 +83,3 @@ This is a Taxi Booking and Billing System using Spring Boot, which allows users 
 * Description: add a new taxi.
 
 ##### Swagger: http://localhost:8080/swagger-ui/index.html
-

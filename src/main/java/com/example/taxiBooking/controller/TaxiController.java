@@ -19,7 +19,7 @@ public class TaxiController {
     private final TaxiService taxiService;
 
     @PostMapping("/addTaxi")
-    public ResponseEntity<TaxiResponse> addTaxi(@Valid @RequestBody TaxiRequest request){
+    public ResponseEntity<TaxiResponse> addTaxi(@Valid @RequestBody TaxiRequest request) {
         return ResponseEntity.ok(taxiService.addTaxi(request));
     }
 }
