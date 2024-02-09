@@ -24,6 +24,7 @@ import com.example.taxiBooking.repository.BookingRepository;
 import com.example.taxiBooking.repository.TaxiRepository;
 import com.example.taxiBooking.repository.UserRepository;
 import com.example.taxiBooking.service.BookingService;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -104,11 +105,26 @@ public class BookingServiceTest {
 
     @Test
     void testGetById() {
-        Booking sampleBooking = new Booking(1L, null, null, null, null, 10d, null, true, true);
-        Long id = 1L;
-        when(bookingRepository.findById(id)).thenReturn(Optional.of(sampleBooking));
-        Booking retrievedEmployee = bookingService.getById(id);
-        assertEquals(sampleBooking, retrievedEmployee);
+
+        BookingRequest request = new BookingRequest("hh", "aa");
+        Long bookingId = 1L;
+        Long distance = 80L;
+        Double expense = distance * 10.0;
+        Booking expectedBooking =
+                Booking.builder()
+                        .id(bookingId)
+                        .pickUpLocation(request.getPickUpLocation())
+                        .dropOffLocation(request.getDropOffLocation())
+                        .bookingTime(LocalDateTime.now())
+                        .fare(expense)
+                        .build();
+        BookingResponse expectedResponse = modelMapper.map(expectedBooking, BookingResponse.class);
+
+        when(bookingRepository.findById(expectedBooking.getId()))
+                .thenReturn(Optional.of(expectedBooking));
+
+        BookingResponse actualResponse = bookingService.getById(bookingId);
+        assertEquals(expectedResponse, actualResponse);
     }
 
     @Test

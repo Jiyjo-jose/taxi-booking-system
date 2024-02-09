@@ -38,7 +38,7 @@ public class User implements UserDetails {
     @JoinColumn(name = "booking_id")
     private List<Booking> booking;
 
-    private double accountBalance;
+    private double accountBalance = 0;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

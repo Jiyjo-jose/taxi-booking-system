@@ -90,14 +90,12 @@ public class UserControllerTest {
 
         Long bookingId = 1L;
         Long userId = 1L;
-        UpdateAccountResponse updateAccountResponse = new UpdateAccountResponse(2d);
         UserService userService = mock(UserService.class);
         UserController userController = new UserController(userService);
 
-        ResponseEntity<String> responseEntity =
-                userController.completeRide(userId, bookingId, updateAccountResponse);
+        ResponseEntity<String> responseEntity = userController.completeRide(userId, bookingId);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("ride completed", responseEntity.getBody());
-        verify(userService, times(1)).completeRide(userId, bookingId, updateAccountResponse);
+        verify(userService, times(1)).completeRide(userId, bookingId);
     }
 }

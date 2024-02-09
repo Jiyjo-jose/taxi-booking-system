@@ -146,7 +146,6 @@ public class UserServiceTest {
     public void testCompleteRide() {
         Long userId = 1L;
         Long bookingId = 1L;
-        UpdateAccountResponse updateAccountResponse = new UpdateAccountResponse();
         Booking booking = new Booking();
         booking.setRideStatus(false);
 
@@ -155,13 +154,12 @@ public class UserServiceTest {
         booking.setRideStatus(true);
         when(bookingRepository.findById(bookingId)).thenReturn(Optional.empty());
         assertThrows(
-                BookingNotFoundException.class,
-                () -> userService.completeRide(userId, bookingId, updateAccountResponse));
+                BookingNotFoundException.class, () -> userService.completeRide(userId, bookingId));
         when(bookingRepository.findById(bookingId)).thenReturn(Optional.of(booking));
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        userService.completeRide(userId, bookingId, updateAccountResponse);
+        userService.completeRide(userId, bookingId);
 
         verify(bookingRepository).save(booking);
 

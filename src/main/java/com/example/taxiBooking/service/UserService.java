@@ -64,7 +64,7 @@ public class UserService {
         return modelMapper.map(updatedUser, UpdateAccountResponse.class);
     }
 
-    public void completeRide(Long userId, Long bookingId, UpdateAccountResponse response) {
+    public void completeRide(Long userId, Long bookingId) {
         Booking booking =
                 bookingRepository
                         .findById(bookingId)
@@ -76,16 +76,24 @@ public class UserService {
             bookingRepository
                     .findById(bookingId)
                     .orElseThrow(() -> new BookingNotFoundException("booking not found"));
-            if (response.getAccountBalance() < booking.getFare()) {
-                throw new LowAccountBalanceException();
-            }
-            double accountBalance = response.getAccountBalance() - booking.getFare();
-            User User =
+            User user =
                     userRepository
                             .findById(userId)
                             .orElseThrow(() -> new UserNotFoundException("user not found"));
-            User.setAccountBalance(accountBalance);
-            userRepository.save(User);
+            if (user.getAccountBalance() < booking.getFare()) {
+                throw new LowAccountBalanceException();
+            }
+            double accountBalance = user.getAccountBalance();
+            double newBalance = accountBalance - booking.getFare();
+            User updatedUser =
+                    User.builder()
+                            .id(user.getId())
+                            .name(user.getName())
+                            .email(user.getEmail())
+                            .password(user.getPassword())
+                            .accountBalance(newBalance)
+                            .build();
+            userRepository.save(updatedUser);
         }
     }
 }

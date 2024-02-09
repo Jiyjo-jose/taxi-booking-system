@@ -3,7 +3,6 @@ package com.example.taxiBooking.controller;
 import com.example.taxiBooking.contract.request.BookingRequest;
 import com.example.taxiBooking.contract.response.BookingResponse;
 import com.example.taxiBooking.contract.response.TaxiResponse;
-import com.example.taxiBooking.model.Booking;
 import com.example.taxiBooking.service.BookingService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -35,7 +34,7 @@ public class BookingController {
     }
 
     @GetMapping("/{id}/viewBooking")
-    public Booking getById(@PathVariable Long id) {
+    public BookingResponse getById(@PathVariable Long id) {
         return bookingService.getById(id);
     }
 

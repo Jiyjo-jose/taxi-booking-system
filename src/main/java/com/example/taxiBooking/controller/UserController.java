@@ -43,10 +43,8 @@ public class UserController {
 
     @PutMapping("/rideCompleted")
     public ResponseEntity<String> completeRide(
-            @RequestParam Long userId,
-            @RequestParam Long bookingId,
-            @RequestBody UpdateAccountResponse response) {
-        userService.completeRide(userId, bookingId, response);
+            @RequestParam Long userId, @RequestParam Long bookingId) {
+        userService.completeRide(userId, bookingId);
         return ResponseEntity.ok("ride completed");
     }
 }

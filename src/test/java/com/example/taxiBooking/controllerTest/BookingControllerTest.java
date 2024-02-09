@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -17,7 +18,6 @@ import com.example.taxiBooking.contract.request.BookingRequest;
 import com.example.taxiBooking.contract.response.BookingResponse;
 import com.example.taxiBooking.contract.response.TaxiResponse;
 import com.example.taxiBooking.controller.BookingController;
-import com.example.taxiBooking.model.Booking;
 import com.example.taxiBooking.service.BookingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
@@ -66,15 +66,14 @@ public class BookingControllerTest {
     @Test
     void testGetById() throws Exception {
         Long bookingId = 1L;
-        Booking booking = new Booking();
+        BookingResponse bookingResponse = new BookingResponse();
 
-        when(bookingService.getById(bookingId)).thenReturn(booking);
+        when(bookingService.getById(bookingId)).thenReturn(bookingResponse);
 
-        mockMvc.perform(
-                        get("/v2/{id}/viewBooking", bookingId)
-                                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v2/" + bookingId + "/viewBooking"))
+                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(booking)));
+                .andExpect(content().json(new ObjectMapper().writeValueAsString(bookingResponse)));
     }
 
     @Test

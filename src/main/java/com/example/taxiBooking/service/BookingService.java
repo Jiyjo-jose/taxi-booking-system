@@ -75,10 +75,12 @@ public class BookingService {
                 .collect(Collectors.toList());
     }
 
-    public Booking getById(Long id) {
-        return bookingRepository
-                .findById(id)
-                .orElseThrow(() -> new BookingNotFoundException("booking not found"));
+    public BookingResponse getById(Long id) {
+        Booking booking =
+                bookingRepository
+                        .findById(id)
+                        .orElseThrow(() -> new BookingNotFoundException("booking not found"));
+        return modelMapper.map(booking, BookingResponse.class);
     }
 
     public void cancelBooking(Long id) {
