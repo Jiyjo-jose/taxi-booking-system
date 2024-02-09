@@ -41,8 +41,7 @@ public class BookingService {
                 .orElseThrow(
                         ()-> new UserNotFoundException("user not found")
                 );
-        double basicFare= 100.00;
-        double fare = basicFare + ((distance-5)*20.00);
+        double fare = ((distance)*30.00);
         Booking booking1= Booking.builder()
                 .user(user)
                 .taxi(taxi)

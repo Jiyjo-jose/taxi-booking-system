@@ -6,81 +6,81 @@ This is a Taxi Booking and Billing System using Spring Boot, which allows users 
 
 ### Installation
 
-Clone the repository:https://github.com/Jiyjo-jose/taxi-booking-system
+* Clone the repository:https://github.com/Jiyjo-jose/taxi-booking-system
 
-Open the project.
+* Open the project.
 
-Ensure you have Java and Maven installed.
+* Ensure you have Java and Maven installed.
 ### Endpoints
 
 #### User
 
 #### Register
-Endpoint: /v1/registration
+* Endpoint: /v1/registration
 
-Method: POST
+* Method: POST
 
-Description: Register a new user.
+* Description: Register a new user.
 
 #### UpdateAccountBalance
 
-Endpoint: /v1/{id}/updateAccountBalance
+* Endpoint: /v1/{id}/updateAccountBalance
 
-Method: PUT
+* Method: PUT
 
-Description:Update AccountBalance.
+* Description:Update AccountBalance.
 
 #### RideCompleted
 
-Endpoint: /v1/rideComplete
+* Endpoint: /v1/rideComplete
 
-Method: PUT
+* Method: PUT
 
-Description: mark ride as completed and this is where payment is done from accountBalance.
+* Description: mark ride as completed and this is where payment is done from accountBalance.
 
 ### Booking
 
 #### Book
 
-Endpoint: /v2/booking
+* Endpoint: /v2/booking
 
-Method: POST
+* Method: POST
 
-Description: make a booking.
+* Description: make a booking.
 
 #### View Booking
 
-Endpoint: /v2/{id}/viewBooking
+* Endpoint: /v2/{id}/viewBooking
 
-Method: GET
+* Method: GET
 
-Description: View Booking.
+* Description: View Booking.
 
 #### Cancel Booking
 
-Endpoint: v2/{id}/cancel
+* Endpoint: v2/{id}/cancel
 
-Method: PUT
+* Method: PUT
 
-Description:Cancel a booking.
+* Description:Cancel a booking.
 
 #### SearchTaxi
 
-Endpoint: /v2/searchTaxi
+* Endpoint: /v2/searchTaxi
 
-Method: GET
+* Method: GET
 
-Description: search for nearby taxi.
+* Description: search for nearby taxi.
 
 ### Taxi
 
 #### AddTaxi
 
-Endpoint: /v3/addTaxi
+* Endpoint: /v3/addTaxi
 
-Method: POST
+* Method: POST
 
-Description: add a new taxi.
+* Description: add a new taxi.
 
 ##### Swagger: http://localhost:8080/swagger-ui/index.html
 

@@ -30,8 +30,8 @@ public class TaxiControllerTest {
 
     @Test
     void testAddTaxi() throws Exception {
-        TaxiRequest request = new TaxiRequest("Name", "123ABC", "Location1");
-        TaxiResponse expectedResponse = new TaxiResponse(1L, "Name", "123ABC", "Location1");
+        TaxiRequest request = new TaxiRequest("Name", "aaa", "Location1");
+        TaxiResponse expectedResponse = new TaxiResponse(1L, "Name", "aaa", "Location1");
 
         when(taxiService.addTaxi(any(TaxiRequest.class))).thenReturn(expectedResponse);
 

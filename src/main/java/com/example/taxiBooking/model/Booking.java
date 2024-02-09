@@ -41,23 +41,6 @@ public class Booking {
     private  boolean bookingStatus;
 
     private boolean rideStatus;
-
-    public  boolean  getBookingStatus() {
-
-        return  bookingStatus;
-    }
-    public  boolean  getRideStatus() {
-
-        return  rideStatus;
-    }
-
-    public void setBookingStatus(boolean status) {
-        this.bookingStatus = status;
-    }
-
-    public void setRideStatus(boolean status) {this.rideStatus = status;
-    }
-
     public boolean isRideStatus(boolean b) {
         this.rideStatus =b;
         return b;

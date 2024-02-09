@@ -7,6 +7,7 @@ import com.example.taxiBooking.contract.response.LoginResponse;
 import com.example.taxiBooking.contract.response.SignUpResponse;
 import com.example.taxiBooking.contract.response.UpdateAccountResponse;
 import com.example.taxiBooking.exception.BookingNotFoundException;
+import com.example.taxiBooking.exception.EmailAlreadyExistsException;
 import com.example.taxiBooking.exception.LowAccountBalanceException;
 import com.example.taxiBooking.exception.UserNotFoundException;
 import com.example.taxiBooking.model.Booking;
@@ -32,6 +33,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -68,6 +71,19 @@ public class UserServiceTest {
         verify(userRepository).save(Mockito.<User>any());
         verify(passwordEncoder).encode(Mockito.<CharSequence>any());
 
+    }
+    @Test
+    public void testRegister_ExistingEmail_ExceptionThrown() {
+
+        SignUpRequest request = new SignUpRequest("aa", "j@gmail.com", "password123");
+
+        when(userRepository.existsByEmail("j@gmail.com")).thenReturn(true);
+
+        assertThrows(EmailAlreadyExistsException.class, () -> userService.register(request));
+        verify(userRepository, times(1)).existsByEmail("j@gmail.com");
+        verify(passwordEncoder, never()).encode(anyString());
+        verify(userRepository, never()).save(any(User.class));
+        verify(modelMapper, never()).map(any(User.class), eq(SignUpResponse.class));
     }
 
     @Test
@@ -180,8 +196,6 @@ public class UserServiceTest {
 
         assertEquals(expectedMessage, exception.getMessage());
     }
-
-
 
 
 }

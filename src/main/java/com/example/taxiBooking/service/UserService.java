@@ -7,6 +7,7 @@ import com.example.taxiBooking.contract.response.LoginResponse;
 import com.example.taxiBooking.contract.response.SignUpResponse;
 import com.example.taxiBooking.contract.response.UpdateAccountResponse;
 import com.example.taxiBooking.exception.BookingNotFoundException;
+import com.example.taxiBooking.exception.EmailAlreadyExistsException;
 import com.example.taxiBooking.exception.UserNotFoundException;
 import com.example.taxiBooking.exception.LowAccountBalanceException;
 import com.example.taxiBooking.model.Booking;
@@ -31,11 +32,15 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     public SignUpResponse register(SignUpRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new EmailAlreadyExistsException();
+        }
         User user= User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
+
         userRepository.save(user);
         return modelMapper.map(user,SignUpResponse.class);
     }
@@ -63,9 +68,8 @@ public class UserService {
                 .orElseThrow(
                         ()->new BookingNotFoundException("booking not found")
                 );
-
         booking.setRideStatus(false);
-            bookingRepository.save(booking);
+        bookingRepository.save(booking);
 
         if(booking.isRideStatus(true)){
             bookingRepository.findById(bookingId)

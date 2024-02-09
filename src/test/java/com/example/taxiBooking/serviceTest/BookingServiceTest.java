@@ -24,11 +24,11 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -52,7 +52,8 @@ public class BookingServiceTest {
         modelMapper=new ModelMapper();
         bookingService=new BookingService(modelMapper,bookingRepository,userRepository,taxiRepository);
     }
-    @Test
+
+        @Test
     void book_ValidRequest_SuccessfullyBooked() {
 
         BookingService bookingService = new BookingService(modelMapper,bookingRepository, userRepository, taxiRepository);
@@ -80,8 +81,6 @@ public class BookingServiceTest {
         assertNotNull(response);
         assertEquals(null, response.getPickUpLocation());
         assertEquals(null, response.getDropOffLocation());
-        assertFalse(booking.getBookingStatus());
-        assertFalse(booking.getRideStatus());
 
         ArgumentCaptor<Booking> captor = ArgumentCaptor.forClass(Booking.class);
         verify(bookingRepository).save(captor.capture());
@@ -89,7 +88,7 @@ public class BookingServiceTest {
         assertNotNull(savedBooking);
         assertEquals(user, savedBooking.getUser());
         assertEquals(taxi, savedBooking.getTaxi());
-        assertEquals(100.00 + ((distance - 5) * 20.00), savedBooking.getFare());
+        assertEquals(((distance)*30.00), savedBooking.getFare());
         assertNotNull(savedBooking.getBookingTime());
         assertEquals("PickupLocation", savedBooking.getPickUpLocation());
         assertEquals("DropOffLocation", savedBooking.getDropOffLocation());
@@ -147,7 +146,7 @@ public class BookingServiceTest {
         Mockito.when(taxiRepository.findAll()).thenReturn(allTaxis);
 
         ModelMapper modelMapper = Mockito.mock(ModelMapper.class);
-        Mockito.when(modelMapper.map(Mockito.any(), Mockito.eq(TaxiResponse.class))).thenReturn(new TaxiResponse());
+        Mockito.when(modelMapper.map(Mockito.any(), eq(TaxiResponse.class))).thenReturn(new TaxiResponse());
 
 
         BookingService bookingService = new BookingService( modelMapper,bookingRepository,userRepository,taxiRepository);

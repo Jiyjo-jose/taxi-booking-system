@@ -15,6 +15,5 @@ public class SignUpResponse {
     private String name;
     @Email
     private String email;
-    private String password;
 
 }

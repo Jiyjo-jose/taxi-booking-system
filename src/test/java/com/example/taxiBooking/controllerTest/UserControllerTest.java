@@ -44,8 +44,8 @@ public class UserControllerTest {
     @Test
     void testRegister() throws Exception {
 
-        SignUpRequest request = new SignUpRequest("null", "email@email", "null");
-        SignUpResponse expectedResponse = new SignUpResponse(1L, "null", "email@email",null);
+        SignUpRequest request = new SignUpRequest("null", "hh@gmail.com", "null");
+        SignUpResponse expectedResponse = new SignUpResponse( 1L, "aa","hh@gmail.com");
 
         when(userService.register(any(SignUpRequest.class))).thenReturn(expectedResponse);
 
@@ -59,7 +59,7 @@ public class UserControllerTest {
     }
     @Test
     void testLogin() throws Exception {
-        LoginRequest loginRequest = new LoginRequest("sharok23@gmail.com", "Helloworld");
+        LoginRequest loginRequest = new LoginRequest("hh@gmail.com", "Helloworld");
         LoginResponse expectedResponse =
                 new LoginResponse(
                         "eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoic2hhcm9rIiwiaWQiOjIsInN1YiI6IjJAZ21haWwuY29tIiwiaWF0IjoxNzA2OTM5Njg3LCJleHAiOjE3MDcwMjYwODd9.FhuhQzgMlXpdCyEJ0hfm8VNbvBYgv6eeZcwhpacfQEg");
