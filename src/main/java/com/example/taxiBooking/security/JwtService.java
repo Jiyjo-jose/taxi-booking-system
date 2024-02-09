@@ -20,9 +20,7 @@ import org.springframework.stereotype.Service;
 public class JwtService {
 
     private static final long expirationTime = 1000 * 60 * 60 * 24;
-    private static final String secretKey =
-            "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
-
+    private static final String secretKey = System.getenv("SECRET_KEY");
     public String generateToken(User userDetails) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", userDetails.getId());

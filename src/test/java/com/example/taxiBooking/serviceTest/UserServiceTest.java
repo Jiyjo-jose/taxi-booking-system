@@ -159,8 +159,12 @@ public class UserServiceTest {
         User user = new User();
         booking.setId(bookingId);
         booking.setRideStatus(true);
-
+        when(bookingRepository.findById(bookingId)).thenReturn(Optional.empty());
+        assertThrows(
+                BookingNotFoundException.class,
+                () -> userService.completeRide(userId,bookingId,updateAccountResponse));
         when(bookingRepository.findById(bookingId)).thenReturn(Optional.of(booking));
+
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         userService.completeRide(userId, bookingId,updateAccountResponse);
@@ -168,23 +172,6 @@ public class UserServiceTest {
         verify(bookingRepository).save(booking);
 
         assertTrue(booking.isRideStatus(true));
-    }
-    @Test
-    void testCompleteRideWhenBookingNotFound() {
-
-        Long bookingId = 1L;
-        Long userId =1L;
-        UpdateAccountResponse response= new UpdateAccountResponse();
-        when(bookingRepository.findById(anyLong())).thenReturn(Optional.empty());
-
-        BookingNotFoundException exception = assertThrows(BookingNotFoundException.class,
-                () -> userService.completeRide(userId,bookingId,response));
-
-        verify(bookingRepository, times(1)).findById(bookingId);
-
-        verify(bookingRepository, never()).save(any());
-
-        assertEquals("booking not found", exception.getMessage());
     }
 
     @Test

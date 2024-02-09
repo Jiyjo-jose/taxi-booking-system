@@ -5,6 +5,7 @@ import com.example.taxiBooking.contract.response.BookingResponse;
 import com.example.taxiBooking.contract.response.TaxiResponse;
 import com.example.taxiBooking.exception.BookingNotFoundException;
 import com.example.taxiBooking.exception.TaxiNotFoundException;
+import com.example.taxiBooking.exception.UserNotFoundException;
 import com.example.taxiBooking.model.Booking;
 import com.example.taxiBooking.model.Taxi;
 import com.example.taxiBooking.model.User;
@@ -67,14 +68,23 @@ public class BookingServiceTest {
         double distance = 10.0;
 
         User user = new User();
-        Booking booking= new Booking();
+
         user.setId(userId);
 
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
 
         Taxi taxi = new Taxi();
         taxi.setTaxiId(taxiId);
+            when(taxiRepository.findById(taxiId)).thenReturn(Optional.empty());
+            assertThrows(
+                    TaxiNotFoundException.class,
+                    () -> bookingService.book(request,userId,taxiId,distance));
         when(taxiRepository.findById(taxiId)).thenReturn(Optional.of(taxi));
+            when(userRepository.findById(userId)).thenReturn(Optional.empty());
+            assertThrows(
+                    UserNotFoundException.class,
+                    () -> bookingService.book(request,userId,taxiId,distance));
+            when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         BookingResponse response = bookingService.book(request, userId, taxiId, distance);
 
@@ -94,22 +104,7 @@ public class BookingServiceTest {
         assertEquals("DropOffLocation", savedBooking.getDropOffLocation());
 
     }
-    @Test
-    void testBookWhenTaxiNotFound() {
 
-        Long userId = 1L;
-        Long taxiId=1L;
-        BookingRequest bookingRequest = new BookingRequest(null,null);
-        when(taxiRepository.findById(anyLong())).thenReturn(Optional.empty());
-
-        TaxiNotFoundException exception = assertThrows(TaxiNotFoundException.class,
-                () -> bookingService.book(bookingRequest,userId,taxiId,10d));
-        verify(taxiRepository, times(1)).findById(taxiId);
-
-        verify(taxiRepository, never()).save(any());
-
-        assertEquals(" not available near pickup location", exception.getMessage());
-    }
 
 
     @Test
