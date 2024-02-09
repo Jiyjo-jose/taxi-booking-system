@@ -12,5 +12,4 @@ import lombok.Setter;
 public class BookingRequest {
     private String pickUpLocation;
     private String dropOffLocation;
-
 }
